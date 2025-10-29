@@ -15,7 +15,8 @@
 		"enabled": true
 	},
 	"vars": {
-		"EXTRACT_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+		// "EXTRACT_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+		"EXTRACT_MODEL": "google-ai-studio/gemini-2.5-flash",
 		"JWT_MIN_TTL": 300,
 		"JWT_MAX_TTL": 6000
 	},

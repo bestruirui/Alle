@@ -9,7 +9,7 @@ import {
   FieldError,
   FieldGroup,
 } from "@/components/ui/field";
-import type { ApiResponse } from "@/utils/resp";
+import type { ApiResponse } from "@/lib/utils/resp";
 
 interface LoginPageProps {
   onLoginSuccess: (token: string) => void;

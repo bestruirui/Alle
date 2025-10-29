@@ -3,7 +3,7 @@ import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/EmailList";
 import type { Email } from "@/lib/db/email";
-import type { ApiResponse } from "@/utils/resp";
+import type { ApiResponse } from "@/lib/utils/resp";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

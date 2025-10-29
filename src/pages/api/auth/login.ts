@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { success, failure } from '@/utils/resp';
+import { success, failure } from '@/lib/utils/resp';
 import { SignJWT } from 'jose';
 import { createHash } from 'crypto';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
