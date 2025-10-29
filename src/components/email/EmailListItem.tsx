@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getProviderLogo, formatTime } from "@/lib/utils/utils";
 import type { Email } from "@/lib/db/email";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDevice } from "@/contexts/DeviceContext";
 import { Copy, Check, Trash2, CheckSquare } from "lucide-react";
 import {
   AlertDialog,
@@ -91,9 +92,7 @@ export function EmailListItem({
   isEmailSelected = false
 }: EmailListItemProps) {
   const logo = getProviderLogo(email.fromAddress);
-
-  // 检测是否为移动端
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const { isMobile } = useDevice();
 
   const handleDelete = () => {
     if (onDelete) {

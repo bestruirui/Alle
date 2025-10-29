@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { RefreshCw, Mail, Trash2, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useDevice } from "@/contexts/DeviceContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,12 +42,13 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
+  const { isMobile } = useDevice();
 
   const handleEmailClick = (email: Email) => {
     // 正常模式下，点击邮件查看详情
     setSelectedEmail(email);
     // 检测是否为移动端
-    if (window.innerWidth < 768) {
+    if (isMobile) {
       setIsMobileDrawerOpen(true);
     }
   };
