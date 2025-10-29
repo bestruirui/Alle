@@ -2,7 +2,8 @@
 
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getProviderLogo, formatTime } from "@/lib/utils/utils";
+import { formatTime } from "@/lib/utils/utils";
+import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/lib/db/email";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDevice } from "@/contexts/DeviceContext";

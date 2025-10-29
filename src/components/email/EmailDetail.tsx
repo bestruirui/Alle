@@ -5,7 +5,8 @@ import { Mail, Clock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailContent } from "@/components/email/EmailContent";
-import { getProviderLogo, formatTime } from "@/lib/utils/utils";
+import { formatTime } from "@/lib/utils/utils";
+import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/lib/db/email";
 
 interface EmailDetailProps {

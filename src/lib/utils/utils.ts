@@ -4,24 +4,6 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-export const providers: Record<string, string> = {
-  google: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/gmail.svg",
-  github: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/github.svg",
-  twitter: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/twitter.svg",
-  microsoft: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/microsoft.svg",
-  apple: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/apple.svg",
-  facebook: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/facebook.svg",
-  cloudflare: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/cloudflare.svg",
-};
-
-export function getProviderLogo(address: string | null) {
-  if (!address) return null;
-  const lower = address.toLowerCase();
-  for (const key of Object.keys(providers)) {
-    if (lower.includes(key)) return providers[key];
-  }
-  return null;
-}
 
 export function formatTime(date: Date | string | null | undefined) {
   if (!date) return "";
