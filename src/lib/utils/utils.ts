@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 export const providers: Record<string, string> = {
-  google: "https://www.gstatic.com/images/branding/product/1x/gmail_2020q4_48dp.png",
-  github: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-  twitter: "https://abs.twimg.com/favicons/twitter.2.ico",
-  microsoft: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
-  apple: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-  facebook: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-  cloudflare: "https://www.cloudflare.com/favicon.ico",
+  google: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/gmail.svg",
+  github: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/github.svg",
+  twitter: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/twitter.svg",
+  microsoft: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/microsoft.svg",
+  apple: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/apple.svg",
+  facebook: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/facebook.svg",
+  cloudflare: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/cloudflare.svg",
 };
 
 export function getProviderLogo(address: string | null) {

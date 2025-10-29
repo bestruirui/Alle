@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProviderLogo, formatTime } from "@/lib/utils/utils";
@@ -93,7 +94,7 @@ export function EmailListItem({
           <div className="flex-shrink-0">
             {logo ? (
               <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center shadow-sm overflow-hidden">
-                <img src={logo} alt="" className="w-8 h-8 object-contain" />
+                <Image src={logo} alt="" width={32} height={32} className="object-contain" />
               </div>
             ) : (
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-sm">

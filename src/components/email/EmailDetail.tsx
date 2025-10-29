@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Mail, Clock, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -42,7 +43,7 @@ export function EmailDetail({ email, onClose }: EmailDetailProps) {
               <div className="flex-shrink-0">
                 {logo ? (
                   <div className="w-14 h-14 rounded-2xl overflow-hidden bg-muted flex items-center justify-center shadow-sm">
-                    <img src={logo} alt="" className="w-9 h-9 object-contain" />
+                    <Image src={logo} alt="" width={36} height={36} className="object-contain" />
                   </div>
                 ) : (
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-sm">
