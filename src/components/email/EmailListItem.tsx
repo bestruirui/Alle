@@ -92,6 +92,9 @@ export function EmailListItem({
 }: EmailListItemProps) {
   const logo = getProviderLogo(email.fromAddress);
 
+  // 检测是否为移动端
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const handleDelete = () => {
     if (onDelete) {
       onDelete(email.id);
@@ -112,10 +115,11 @@ export function EmailListItem({
       transition={{ delay: index * 0.03, duration: 0.3 }}
     >
       <div
-        className={`px-6 py-5 cursor-pointer transition-all duration-200 group ${isSelected
-          ? "bg-primary/10 border-l-4 border-l-primary"
-          : "hover:bg-accent border-l-4 border-l-transparent"
-          }`}
+        className={`px-6 py-5 cursor-pointer transition-all duration-200 group ${
+          isSelected && !isMobile
+            ? "bg-primary/10 border-l-4 border-l-primary"
+            : "hover:bg-accent border-l-4 border-l-transparent"
+        }`}
         onClick={() => onClick(email)}
       >
         <div className="flex items-start gap-4">
