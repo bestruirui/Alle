@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 import withPWA from "next-pwa";
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
-initOpenNextCloudflareForDev()
+if (process.env.NODE_ENV === 'development' && process.env.CI !== 'true') {
+  void initOpenNextCloudflareForDev().catch((error) => {
+    console.warn('[open-next/cloudflare] Failed to initialize dev proxy:', error);
+  });
+}
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -171,6 +175,6 @@ const pwaConfig = withPWA({
   ],
 });
 
-// @ts-ignore - Type compatibility issue between next and next-pwa
+// @ts-expect-error - Type compatibility issue between next and next-pwa
 export default pwaConfig(nextConfig);
 
