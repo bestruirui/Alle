@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { success, failure } from '@/utils/resp';
 import { withAuth } from '@/utils/auth';
-import emailDB from '@/db/email';
-import type { Email } from '@/db/email';
+import emailDB from '@/lib/db/email';
+import type { Email } from '@/lib/db/email';
 
 async function listHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

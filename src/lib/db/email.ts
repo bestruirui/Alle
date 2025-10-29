@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { sql, inArray, desc } from 'drizzle-orm';
-import { getDb } from './common';
+import { getDb, getDbFromEnv } from './common';
 
 export const email = sqliteTable('email', {
   id: integer('id').primaryKey(),
@@ -49,8 +49,8 @@ const emailDB = {
     });
   },
 
-  async create(data: NewEmail): Promise<Email> {
-    const db = getDb();
+  async create(env: CloudflareEnv, data: NewEmail): Promise<Email> {
+    const db = getDbFromEnv(env);
     const row = await db.insert(email).values(data).returning().get();
     return row;
   },

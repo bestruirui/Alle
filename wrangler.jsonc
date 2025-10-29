@@ -19,6 +19,10 @@
 		"JWT_MIN_TTL": 300,
 		"JWT_MAX_TTL": 6000
 	},
+	"ai": {
+		"binding": "AI",
+		"remote": true
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",

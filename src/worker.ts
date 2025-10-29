@@ -1,6 +1,6 @@
 // @ts-expect-error - worker.js will be generated during build
 import { default as handler } from "../.open-next/worker.js";
-import { emailHandler } from "./email/handler";
+import { emailHandler } from "./lib/email/handler";
 
 export default {
   fetch: handler.fetch,

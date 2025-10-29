@@ -1,4 +1,4 @@
-import PROMPT from '../const/prompt';
+import PROMPT from '../../const/prompt';
 import OpenAI from 'openai';
 
 export interface ExtractResult {

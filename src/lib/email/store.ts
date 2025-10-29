@@ -45,7 +45,7 @@ export default async function storeEmail(
             extractResult: JSON.stringify(result),
         };
 
-        const res = await emailDB.create(emailData);
+        const res = await emailDB.create(env, emailData);
 
         console.log("Email stored successfully:", {
             id: res.id,

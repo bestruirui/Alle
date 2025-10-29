@@ -7,3 +7,8 @@ export const getDb = cache((): DrizzleD1Database => {
   const { env } = getCloudflareContext();
   return drizzle(env.DB);
 });
+
+
+export const getDbFromEnv = cache((env: CloudflareEnv): DrizzleD1Database => {
+  return drizzle(env.DB);
+});
