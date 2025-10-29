@@ -81,6 +81,60 @@ export default function Home() {
       });
   };
 
+  // 删除单个邮件
+  const handleDeleteEmail = async (emailId: number) => {
+    if (!authToken) return;
+    
+    try {
+      const response = await fetch("/api/email/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify([emailId]),
+      });
+
+      const data = await response.json() as ApiResponse<null>;
+      
+      if (data.success) {
+        // 从本地状态中移除已删除的邮件
+        setEmails(prevEmails => prevEmails.filter(email => email.id !== emailId));
+      } else {
+        console.error("Failed to delete email:", data.error);
+      }
+    } catch (error) {
+      console.error("Failed to delete email:", error);
+    }
+  };
+
+  // 批量删除邮件
+  const handleBatchDeleteEmails = async (emailIds: number[]) => {
+    if (!authToken || emailIds.length === 0) return;
+    
+    try {
+      const response = await fetch("/api/email/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(emailIds),
+      });
+
+      const data = await response.json() as ApiResponse<null>;
+      
+      if (data.success) {
+        // 从本地状态中移除已删除的邮件
+        setEmails(prevEmails => prevEmails.filter(email => !emailIds.includes(email.id)));
+      } else {
+        console.error("Failed to delete emails:", data.error);
+      }
+    } catch (error) {
+      console.error("Failed to delete emails:", error);
+    }
+  };
+
   // 显示加载页面
   if (isLoading) {
     return <LoadingPage />;
@@ -92,5 +146,13 @@ export default function Home() {
   }
 
   // 显示邮件列表
-  return <EmailList emails={emails} loading={refreshing} onRefresh={handleRefresh} />;
+  return (
+    <EmailList 
+      emails={emails} 
+      loading={refreshing} 
+      onRefresh={handleRefresh}
+      onDelete={handleDeleteEmail}
+      onBatchDelete={handleBatchDeleteEmails}
+    />
+  );
 }

@@ -2,8 +2,19 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { RefreshCw, Mail } from "lucide-react";
+import { RefreshCw, Mail, Trash2, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ModeToggle } from "@/components/ModeToggle";
 import {
   Drawer,
@@ -21,14 +32,18 @@ interface EmailListProps {
   emails: Email[];
   loading: boolean;
   onRefresh: () => void;
+  onDelete?: (emailId: number) => void;
+  onBatchDelete?: (emailIds: number[]) => void;
 }
 
-export default function EmailList({ emails, loading, onRefresh }: EmailListProps) {
+export default function EmailList({ emails, loading, onRefresh, onDelete, onBatchDelete }: EmailListProps) {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
 
   const handleEmailClick = (email: Email) => {
+    // 正常模式下，点击邮件查看详情
     setSelectedEmail(email);
     // 检测是否为移动端
     if (window.innerWidth < 768) {
@@ -36,9 +51,57 @@ export default function EmailList({ emails, loading, onRefresh }: EmailListProps
     }
   };
 
+  const handleAvatarClick = (email: Email, event: React.MouseEvent) => {
+    event.stopPropagation();
+    
+    const newSelected = new Set(selectedEmails);
+    if (newSelected.has(email.id)) {
+      newSelected.delete(email.id);
+    } else {
+      newSelected.add(email.id);
+    }
+    setSelectedEmails(newSelected);
+  };
+
   const handleDrawerClose = () => {
     setIsMobileDrawerOpen(false);
   };
+
+  const handleDeleteEmail = async (emailId: number) => {
+    if (onDelete) {
+      onDelete(emailId);
+      // 如果删除的是当前选中的邮件，清除选中状态
+      if (selectedEmail?.id === emailId) {
+        setSelectedEmail(null);
+      }
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selectedEmails.size === emails.length) {
+      setSelectedEmails(new Set());
+    } else {
+      setSelectedEmails(new Set(emails.map(email => email.id)));
+    }
+  };
+
+  const handleBatchDelete = async () => {
+    if (onBatchDelete && selectedEmails.size > 0) {
+      onBatchDelete(Array.from(selectedEmails));
+      setSelectedEmails(new Set());
+      // 如果删除的邮件包含当前选中的邮件，清除选中状态
+      if (selectedEmail && selectedEmails.has(selectedEmail.id)) {
+        setSelectedEmail(null);
+      }
+    }
+  };
+
+  const handleClearSelection = () => {
+    setSelectedEmails(new Set());
+  };
+
+  const isAllSelected = selectedEmails.size === emails.length && emails.length > 0;
+  const hasSelection = selectedEmails.size > 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -52,28 +115,91 @@ export default function EmailList({ emails, loading, onRefresh }: EmailListProps
               <div>
                 <h1 className="text-2xl font-bold text-foreground">收件箱</h1>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  {emails.length} 封邮件
+                  {hasSelection
+                    ? `已选择 ${selectedEmails.size} 封邮件`
+                    : `${emails.length} 封邮件`
+                  }
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <ModeToggle />
-                <Button
-                  size="icon"
-                  onClick={onRefresh}
-                  disabled={loading}
-                  className="h-10 w-10 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
-                >
-                  <motion.div
-                    animate={{ rotate: loading ? 360 : 0 }}
-                    transition={{
-                      repeat: loading ? Infinity : 0,
-                      duration: 1,
-                      ease: "linear"
-                    }}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                  </motion.div>
-                </Button>
+                {hasSelection ? (
+                  <>
+                    {/* 全选按钮 */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleSelectAll}
+                      className="h-10 w-10 rounded-xl"
+                    >
+                      {isAllSelected ? (
+                        <CheckSquare className="h-4 w-4" />
+                      ) : (
+                        <Square className="h-4 w-4" />
+                      )}
+                    </Button>
+
+                    {/* 批量删除按钮 */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-10 w-10 rounded-xl hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>确认批量删除邮件</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            您确定要删除选中的 <strong>{selectedEmails.size}</strong> 封邮件吗？此操作无法撤销。
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>取消</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleBatchDelete}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            删除
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
+                    {/* 取消选择 */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleClearSelection}
+                      className="rounded-xl"
+                    >
+                      取消
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <ModeToggle />
+                    <Button
+                      size="icon"
+                      onClick={onRefresh}
+                      disabled={loading}
+                      className="h-10 w-10 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                    >
+                      <motion.div
+                        animate={{ rotate: loading ? 360 : 0 }}
+                        transition={{
+                          repeat: loading ? Infinity : 0,
+                          duration: 1,
+                          ease: "linear"
+                        }}
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                      </motion.div>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -122,6 +248,9 @@ export default function EmailList({ emails, loading, onRefresh }: EmailListProps
                     copiedId={copiedId}
                     setCopiedId={setCopiedId}
                     onClick={handleEmailClick}
+                    onDelete={handleDeleteEmail}
+                    onAvatarClick={handleAvatarClick}
+                    isEmailSelected={selectedEmails.has(email.id)}
                   />
                 ))}
               </div>
