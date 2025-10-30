@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { RefreshCw, Mail, Trash2, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useDevice } from "@/contexts/DeviceContext";
+import { useDevice } from "@/provider/Device";
 import {
   AlertDialog,
   AlertDialogAction,

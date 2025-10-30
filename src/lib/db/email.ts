@@ -1,5 +1,5 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { sql, inArray, desc } from 'drizzle-orm';
+import { inArray, desc } from 'drizzle-orm';
 import { getDb, getDbFromEnv } from './common';
 import type { Email, NewEmail, ListParams } from '@/types';
 

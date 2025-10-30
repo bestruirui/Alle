@@ -6,7 +6,7 @@ import { formatTime } from "@/lib/utils/utils";
 import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { useDevice } from "@/contexts/DeviceContext";
+import { useDevice } from "@/provider/Device";
 import { Copy, Check, Trash2, CheckSquare } from "lucide-react";
 import {
   AlertDialog,

@@ -43,3 +43,6 @@ next-env.d.ts
 .dev.vars*
 !.dev.vars.example
 !.env.example
+.claude
+.serena
+.mcp.json
