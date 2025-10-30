@@ -2,11 +2,11 @@
 
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { formatTime } from "@/lib/utils/utils";
 import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDevice } from "@/contexts/DeviceContext";
+import { useTranslation } from "@/lib/i18n";
 import { Copy, Check, Trash2, CheckSquare } from "lucide-react";
 import {
   AlertDialog,
@@ -79,6 +79,7 @@ interface EmailListItemProps {
   onDelete?: (emailId: number) => void;
   onAvatarClick?: (email: Email, event: React.MouseEvent) => void;
   isEmailSelected?: boolean;
+  formattedTime?: string;
 }
 
 export function EmailListItem({
@@ -90,8 +91,10 @@ export function EmailListItem({
   onClick,
   onDelete,
   onAvatarClick,
-  isEmailSelected = false
+  isEmailSelected = false,
+  formattedTime,
 }: EmailListItemProps) {
+  const { t } = useTranslation();
   const logo = getProviderLogo(email.fromAddress);
   const { isMobile } = useDevice();
 
@@ -177,7 +180,7 @@ export function EmailListItem({
                 </h3>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground flex-shrink-0">
-                    {formatTime(email.sentAt)}
+                    {formattedTime || ''}
                   </span>
                   {/* 删除按钮 */}
                   <div className="w-8 h-8 flex items-center justify-center">
@@ -195,13 +198,13 @@ export function EmailListItem({
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>确认删除邮件</AlertDialogTitle>
+                            <AlertDialogTitle>{t('deleteConfirm')}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              您确定要删除这封来自 <strong>{email.fromName}</strong> 的邮件吗？此操作无法撤销。
+                              {t('deleteDescWithName', { name: email.fromName ?? '' })}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>取消</AlertDialogCancel>
+                            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t('cancel')}</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -209,7 +212,7 @@ export function EmailListItem({
                               }}
                               className="bg-destructive text-white hover:bg-destructive/80 active:bg-destructive/70 transition-colors"
                             >
-                              删除
+                              {t('delete')}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

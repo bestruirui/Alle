@@ -9,18 +9,23 @@ export interface ApiResponse<T = unknown> {
   status: number;
   data: T | null;
   error: string | null;
+  total?: number;
 }
+
+type SuccessExtras<T> = Omit<Partial<ApiResponse<T>>, 'success' | 'status' | 'data' | 'error'>;
 
 export const success = <T = unknown>(
   res: NextApiResponse<ApiResponse<T>>,
   data: T = null as T,
-  status: number = 200
+  status: number = 200,
+  extras: SuccessExtras<T> = {}
 ): void => {
   res.status(status).json({
     success: true,
     status,
     data,
     error: null,
+    ...extras,
   });
 };
 

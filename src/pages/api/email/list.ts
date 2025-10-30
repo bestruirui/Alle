@@ -31,8 +31,11 @@ async function listHandler(req: NextApiRequest, res: NextApiResponse) {
   };
 
   try {
-    const data = await emailDB.list(params);
-    return success<Email[]>(res, data, 200);
+    const [data, total] = await Promise.all([
+      emailDB.list(params),
+      emailDB.count(),
+    ]);
+    return success<Email[]>(res, data, 200, { total });
   } catch (e) {
     console.error('Failed to fetch emails:', e);
     const errorMessage = e instanceof Error ? e.message : String(e);
