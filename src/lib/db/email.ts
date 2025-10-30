@@ -30,7 +30,7 @@ const emailDB = {
     const rows = await db
       .select()
       .from(email)
-      .orderBy(desc(email.receivedAt))
+      .orderBy(desc(email.sentAt))
       .limit(limit)
       .offset(offset);
     return rows;

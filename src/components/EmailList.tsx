@@ -80,10 +80,10 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
   };
 
   const handleSelectAll = () => {
-    if (selectedEmails.size === emails.length) {
+    if (selectedEmails.size === sortedEmails.length) {
       setSelectedEmails(new Set());
     } else {
-      setSelectedEmails(new Set(emails.map(email => email.id)));
+      setSelectedEmails(new Set(sortedEmails.map(email => email.id)));
     }
   };
 
@@ -102,7 +102,14 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
     setSelectedEmails(new Set());
   };
 
-  const isAllSelected = selectedEmails.size === emails.length && emails.length > 0;
+  // 按日期降序排列邮件（较新的在前）
+  const sortedEmails = [...emails].sort((a, b) => {
+    const dateA = a.sentAt ? new Date(a.sentAt).getTime() : 0;
+    const dateB = b.sentAt ? new Date(b.sentAt).getTime() : 0;
+    return dateB - dateA;
+  });
+
+  const isAllSelected = selectedEmails.size === sortedEmails.length && sortedEmails.length > 0;
   const hasSelection = selectedEmails.size > 0;
 
   return (
@@ -119,7 +126,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
                 <p className="text-sm text-muted-foreground mt-0.5">
                   {hasSelection
                     ? `已选择 ${selectedEmails.size} 封邮件`
-                    : `${emails.length} 封邮件`
+                    : `${sortedEmails.length} 封邮件`
                   }
                 </p>
               </div>
@@ -224,7 +231,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
                   </div>
                 ))}
               </div>
-            ) : emails.length === 0 ? (
+            ) : sortedEmails.length === 0 ? (
               // 空状态
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
                 <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4 flex-shrink-0">
@@ -241,7 +248,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
               </div>
             ) : (
               <div className="divide-y divide-border">
-                {emails.map((email, i) => (
+                {sortedEmails.map((email, i) => (
                   <EmailListItem
                     key={email.id}
                     email={email}
