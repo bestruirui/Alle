@@ -39,7 +39,7 @@ export default async function storeEmail(
             bodyText: emailText,
             bodyHtml: email.html || "",
             sentAt: email.date || null,
-            receivedAt: null,
+            receivedAt: new Date().toISOString(),
             verificationType: result.type || "none",
             verificationCode: result.code || "",
             verificationLink: result.link || "",

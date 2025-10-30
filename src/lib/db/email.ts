@@ -15,7 +15,7 @@ const email = sqliteTable('email', {
   bodyText: text('body_text'),
   bodyHtml: text('body_html'),
   sentAt: text('sent_at'),
-  receivedAt: text('received_at').default(sql`CURRENT_TIMESTAMP`),
+  receivedAt: text('received_at'),
   verificationType: text('verification_type'),
   verificationCode: text('verification_code'),
   verificationLink: text('verification_link'),

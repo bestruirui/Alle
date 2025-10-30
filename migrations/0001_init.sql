@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS email (
   body_text TEXT,
   body_html TEXT,
   sent_at TEXT,
-  received_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  received_at TEXT,
   verification_type TEXT,
   verification_code TEXT,
   verification_link TEXT,

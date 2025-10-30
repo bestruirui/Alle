@@ -177,7 +177,7 @@ export function EmailListItem({
                 </h3>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-muted-foreground flex-shrink-0">
-                    {formatTime(email.receivedAt)}
+                    {formatTime(email.sentAt)}
                   </span>
                   {/* 删除按钮 */}
                   <div className="w-8 h-8 flex items-center justify-center">
