@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { jwtVerify } from 'jose';
 import { createHash } from 'crypto';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import { failure } from '../utils/resp';
+import { failure } from '@/types';
 async function authenticate(
   req: NextApiRequest,
   res: NextApiResponse

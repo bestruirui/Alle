@@ -1,19 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { success, failure } from '@/lib/utils/resp';
+import { success, failure } from '@/types';
 import { SignJWT } from 'jose';
 import { createHash } from 'crypto';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-
-interface LoginRequestBody {
-  username: string;
-  password: string;
-  expired?: number | 'none';
-}
-
-interface LoginResponseData {
-  token: string;
-  exp: number | null;
-}
+import type { LoginRequestBody, LoginResponseData } from '@/types';
 
 export default async function handler(
   req: NextApiRequest,

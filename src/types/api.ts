@@ -1,5 +1,9 @@
 import type { NextApiResponse } from 'next';
 
+// ====================
+// API 响应类型
+// ====================
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   status: number;
@@ -32,3 +36,12 @@ export const failure = (
     error,
   });
 };
+
+// ====================
+// API 查询参数类型
+// ====================
+
+export interface ListParams {
+  limit?: number;
+  offset?: number;
+}

@@ -1,7 +1,7 @@
 import PostalMime from "postal-mime";
 import sanitizeHtml from "sanitize-html";
 import emailDB from "../db/email";
-import type { NewEmail } from "../db/email";
+import type { NewEmail } from "@/types";
 import extract from "./extract";
 
 export default async function storeEmail(
@@ -26,22 +26,24 @@ export default async function storeEmail(
 
         console.log(result.type, result.code, result.link, result.error);
 
-        const emailFromAddress = email.from?.address || message.from;
-        const emailFromName = email.from?.name || emailFromAddress.split("@")[0];
+        const emailFromAddress = email.from?.address || message.from || null;
+        const emailFromName = email.from?.name || (emailFromAddress ? emailFromAddress.split("@")[0] : null);
         const emailData: NewEmail = {
-            messageId: email.messageId,
+            messageId: email.messageId || null,
             fromAddress: emailFromAddress,
             fromName: emailFromName,
-            senderAddress: email.sender?.address || email.from?.address || message.from,
+            senderAddress: email.sender?.address || email.from?.address || message.from || null,
             toAddress: message.to,
             recipient: JSON.stringify(email.to),
-            subject: email.subject || "",
+            subject: email.subject || null,
             bodyText: emailText,
             bodyHtml: email.html || "",
-            sentAt: email.date,
+            sentAt: email.date || null,
+            receivedAt: null,
             verificationType: result.type || "none",
             verificationCode: result.code || "",
             verificationLink: result.link || "",
+            verificationUsed: false,
             extractResult: JSON.stringify(result),
         };
 

@@ -1,19 +1,7 @@
 import PROMPT from '../../const/prompt';
 import OpenAI from 'openai';
-
-export interface ExtractResult {
-  type: 'code' | 'link' | 'none';
-  code: string;
-  link: string;
-  error: string;
-}
-
-const DEFAULT_RESPONSE: ExtractResult = {
-  type: 'none',
-  code: '',
-  link: '',
-  error: '',
-};
+import type { ExtractResult } from '@/types';
+import { DEFAULT_EXTRACT_RESULT } from '@/types';
 
 async function extractWithOpenAI(
   content: string,
@@ -113,7 +101,7 @@ export default async function extract(
   } catch (e) {
     console.error('Extraction error:', e);
     return {
-      ...DEFAULT_RESPONSE,
+      ...DEFAULT_EXTRACT_RESULT,
       error: e instanceof Error ? e.message : String(e),
     };
   }

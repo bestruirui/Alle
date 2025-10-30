@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { success, failure } from '@/lib/utils/resp';
+import { success, failure } from '@/types';
 import { withAuth } from '@/lib/auth/auth';
 import emailDB from '@/lib/db/email';
 

@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailContent } from "@/components/email/EmailContent";
 import { formatTime } from "@/lib/utils/utils";
 import { getProviderLogo } from "@/lib/utils/logo";
-import type { Email } from "@/lib/db/email";
+import type { Email } from "@/types";
 
 interface EmailDetailProps {
   email: Email | null;

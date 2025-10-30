@@ -1,8 +1,9 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 import { sql, inArray, desc } from 'drizzle-orm';
 import { getDb, getDbFromEnv } from './common';
+import type { Email, NewEmail, ListParams } from '@/types';
 
-export const email = sqliteTable('email', {
+const email = sqliteTable('email', {
   id: integer('id').primaryKey(),
   messageId: text('message_id').unique(),
   fromAddress: text('from_address'),
@@ -21,14 +22,6 @@ export const email = sqliteTable('email', {
   verificationUsed: integer('verification_used', { mode: 'boolean' }),
   extractResult: text('extract_result'),
 });
-
-export type Email = typeof email.$inferSelect;
-export type NewEmail = typeof email.$inferInsert;
-
-interface ListParams {
-  limit?: number;
-  offset?: number;
-}
 
 const emailDB = {
   async list(params: ListParams = {}): Promise<Email[]> {

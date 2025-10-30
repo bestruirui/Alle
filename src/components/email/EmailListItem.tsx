@@ -4,7 +4,7 @@ import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/utils/utils";
 import { getProviderLogo } from "@/lib/utils/logo";
-import type { Email } from "@/lib/db/email";
+import type { Email } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDevice } from "@/contexts/DeviceContext";
 import { Copy, Check, Trash2, CheckSquare } from "lucide-react";

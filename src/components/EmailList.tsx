@@ -27,7 +27,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailDetail } from "@/components/email/EmailDetail";
 import { EmailListItem } from "@/components/email/EmailListItem";
-import type { Email } from "@/lib/db/email";
+import type { Email } from "@/types";
 
 interface EmailListProps {
   emails: Email[];
@@ -55,7 +55,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
 
   const handleAvatarClick = (email: Email, event: React.MouseEvent) => {
     event.stopPropagation();
-    
+
     const newSelected = new Set(selectedEmails);
     if (newSelected.has(email.id)) {
       newSelected.delete(email.id);

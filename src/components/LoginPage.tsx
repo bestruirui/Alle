@@ -9,15 +9,10 @@ import {
   FieldError,
   FieldGroup,
 } from "@/components/ui/field";
-import type { ApiResponse } from "@/lib/utils/resp";
+import type { ApiResponse, LoginResponseData } from "@/types";
 
 interface LoginPageProps {
   onLoginSuccess: (token: string) => void;
-}
-
-interface LoginResponseData {
-  token: string;
-  exp: number | null;
 }
 
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
