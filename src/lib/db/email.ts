@@ -37,10 +37,9 @@ const emailDB = {
   },
   async delete(items: number[] = []): Promise<void> {
     const db = getDb();
-    await db.transaction(async (tx) => {
-      await tx.delete(email).where(inArray(email.id, items));
-    });
+    await db.delete(email).where(inArray(email.id, items));
   },
+
 
   async create(env: CloudflareEnv, data: NewEmail): Promise<Email> {
     const db = getDbFromEnv(env);
