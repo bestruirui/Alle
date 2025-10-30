@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 
 interface DeviceContextType {
   isMobile: boolean;
@@ -20,20 +20,28 @@ export function DeviceProvider({ children }: DeviceProviderProps) {
     typeof window !== 'undefined' ? window.innerWidth : 1024
   );
 
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    // 初始化屏幕宽度
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
+    const debouncedHandleResize = () => {
+      if (resizeTimeoutRef.current !== null) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+
+      resizeTimeoutRef.current = setTimeout(() => {
+        setScreenWidth(window.innerWidth);
+      }, 300);
     };
 
-    // 监听窗口大小变化
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', debouncedHandleResize);
 
-    // 初始化时设置一次
-    handleResize();
+    debouncedHandleResize();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', debouncedHandleResize);
+      if (resizeTimeoutRef.current !== null) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
     };
   }, []);
 
