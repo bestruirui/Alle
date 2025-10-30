@@ -1,157 +1,108 @@
-import { useState, useEffect } from "react";
+import { Suspense, useEffect, useTransition, useCallback } from "react";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/EmailList";
-import type { Email, ApiResponse } from "@/types";
+import { useAuthStore } from "@/lib/store/auth-store";
+import { useEmailStore } from "@/lib/store/email-store";
+import { useBackgroundResourceManager } from "@/lib/hooks/useBackgroundResourceManager";
 
-export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
+function EmailListContainer() {
+  const token = useAuthStore((state) => state.token);
+  const emails = useEmailStore((state) => state.emails);
+  const isLoading = useEmailStore((state) => state.isLoading);
+  const isRefreshing = useEmailStore((state) => state.isRefreshing);
+  const fetchFromLocal = useEmailStore((state) => state.fetchFromLocal);
+  const syncWithRemote = useEmailStore((state) => state.syncWithRemote);
+  const deleteEmails = useEmailStore((state) => state.deleteEmails);
 
-  // 检查登录状态
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
+  const [isPending, startTransition] = useTransition();
+
+  const handlePageVisible = useCallback(() => {
     if (token) {
-      setAuthToken(token);
-      setIsAuthenticated(true);
-      fetchEmails(token);
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // 获取邮件列表
-  const fetchEmails = async (token: string) => {
-    try {
-      const response = await fetch("/api/email/list", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      startTransition(() => {
+        syncWithRemote(token).catch((error: Error) => {
+          if (error.message === "Unauthorized") {
+            useAuthStore.getState().logout();
+          }
+        });
       });
-
-      const data = (await response.json()) as ApiResponse<Email[]>;
-
-      if (data.success && data.data) {
-        setEmails(data.data);
-      } else if (response.status === 401) {
-        // Token 过期,清除登录状态
-        localStorage.removeItem("auth_token");
-        setIsAuthenticated(false);
-        setAuthToken(null);
-      }
-    } catch (error) {
-      console.error("Failed to fetch emails:", error);
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [token, syncWithRemote]);
 
-  // 登录成功回调
-  const handleLoginSuccess = (token: string) => {
-    setAuthToken(token);
-    setIsAuthenticated(true);
-    setIsLoading(true);
-    fetchEmails(token);
-  };
+  useBackgroundResourceManager({
+    onPageVisible: handlePageVisible,
+  });
 
-  // 刷新邮件列表
+  useEffect(() => {
+    fetchFromLocal();
+    if (token) {
+      startTransition(() => {
+        syncWithRemote(token).catch((error: Error) => {
+          if (error.message === "Unauthorized") {
+            useAuthStore.getState().logout();
+          }
+        });
+      });
+    }
+  }, [token, fetchFromLocal, syncWithRemote]);
+
   const handleRefresh = () => {
-    if (!authToken) return;
-    setRefreshing(true);
-    fetch("/api/email/list", {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
-      .then((res) => res.json() as Promise<ApiResponse<Email[]>>)
-      .then((data) => {
-        if (data.success && data.data) {
-          setEmails(data.data);
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to refresh emails:", error);
-      })
-      .finally(() => {
-        setRefreshing(false);
-      });
+    if (!token) return;
+    startTransition(() => {
+      syncWithRemote(token).catch(console.error);
+    });
   };
 
-  // 删除单个邮件
   const handleDeleteEmail = async (emailId: number) => {
-    if (!authToken) return;
-    
-    try {
-      const response = await fetch("/api/email/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify([emailId]),
-      });
-
-      const data = await response.json() as ApiResponse<null>;
-      
-      if (data.success) {
-        // 从本地状态中移除已删除的邮件
-        setEmails(prevEmails => prevEmails.filter(email => email.id !== emailId));
-      } else {
-        console.error("Failed to delete email:", data.error);
-      }
-    } catch (error) {
-      console.error("Failed to delete email:", error);
-    }
+    if (!token) return;
+    await deleteEmails(token, [emailId]);
   };
 
-  // 批量删除邮件
   const handleBatchDeleteEmails = async (emailIds: number[]) => {
-    if (!authToken || emailIds.length === 0) return;
-    
-    try {
-      const response = await fetch("/api/email/delete", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(emailIds),
-      });
-
-      const data = await response.json() as ApiResponse<null>;
-      
-      if (data.success) {
-        // 从本地状态中移除已删除的邮件
-        setEmails(prevEmails => prevEmails.filter(email => !emailIds.includes(email.id)));
-      } else {
-        console.error("Failed to delete emails:", data.error);
-      }
-    } catch (error) {
-      console.error("Failed to delete emails:", error);
-    }
+    if (!token) return;
+    await deleteEmails(token, emailIds);
   };
 
-  // 显示加载页面
-  if (isLoading) {
+  if (isLoading && emails.length === 0) {
     return <LoadingPage />;
   }
 
-  // 显示登录页面
-  if (!isAuthenticated) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  // 显示邮件列表
   return (
-    <EmailList 
-      emails={emails} 
-      loading={refreshing} 
+    <EmailList
+      emails={emails}
+      loading={isRefreshing || isPending}
       onRefresh={handleRefresh}
       onDelete={handleDeleteEmail}
       onBatchDelete={handleBatchDeleteEmails}
     />
+  );
+}
+
+export default function Home() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isInitializing = useAuthStore((state) => state.isInitializing);
+  const initialize = useAuthStore((state) => state.initialize);
+  const login = useAuthStore((state) => state.login);
+
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  const handleLoginSuccess = (token: string) => {
+    login(token);
+  };
+
+  if (isInitializing) {
+    return <LoadingPage />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  return (
+    <Suspense fallback={<LoadingPage />}>
+      <EmailListContainer />
+    </Suspense>
   );
 }

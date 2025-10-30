@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useTransition, useMemo, useRef } from "react";
 import { RefreshCw, Mail, Trash2, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDevice } from "@/contexts/DeviceContext";
@@ -26,8 +26,11 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailDetail } from "@/components/email/EmailDetail";
-import { EmailListItem } from "@/components/email/EmailListItem";
+import { VirtualizedEmailList } from "@/components/email/VirtualizedEmailList";
 import type { Email } from "@/types";
+import { useEmailStore } from "@/lib/store/email-store";
+import { useVisibilityObserver } from "@/lib/hooks/useVisibilityObserver";
+import { usePreloadImages } from "@/lib/hooks/usePreload";
 
 interface EmailListProps {
   emails: Email[];
@@ -38,31 +41,51 @@ interface EmailListProps {
 }
 
 export default function EmailList({ emails, loading, onRefresh, onDelete, onBatchDelete }: EmailListProps) {
-  const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const selectedEmail = useEmailStore((state) => state.selectedEmail);
+  const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
+  const selectedEmails = useEmailStore((state) => state.selectedEmails);
+  const toggleEmailSelection = useEmailStore((state) => state.toggleEmailSelection);
+  const selectAllEmails = useEmailStore((state) => state.selectAllEmails);
+  const clearSelection = useEmailStore((state) => state.clearSelection);
+  
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-  const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
+  const [, startTransition] = useTransition();
   const { isMobile } = useDevice();
 
+  const sortedEmails = useMemo(() => {
+    return [...emails].sort((a, b) => {
+      const dateA = a.sentAt ? new Date(a.sentAt).getTime() : 0;
+      const dateB = b.sentAt ? new Date(b.sentAt).getTime() : 0;
+      return dateB - dateA;
+    });
+  }, [emails]);
+
+  usePreloadImages(sortedEmails, { enabled: true, maxItems: 10 });
+
+  const lastPrefetchRef = useRef(0);
+  const sentinelRef = useVisibilityObserver<HTMLDivElement>({
+    threshold: 0.5,
+    onVisible: () => {
+      const now = Date.now();
+      if (!loading && now - lastPrefetchRef.current > 30000) {
+        lastPrefetchRef.current = now;
+        onRefresh();
+      }
+    },
+  });
+
   const handleEmailClick = (email: Email) => {
-    // 正常模式下，点击邮件查看详情
-    setSelectedEmail(email);
-    // 检测是否为移动端
-    if (isMobile) {
-      setIsMobileDrawerOpen(true);
-    }
+    startTransition(() => {
+      setSelectedEmail(email);
+      if (isMobile) {
+        setIsMobileDrawerOpen(true);
+      }
+    });
   };
 
   const handleAvatarClick = (email: Email, event: React.MouseEvent) => {
     event.stopPropagation();
-
-    const newSelected = new Set(selectedEmails);
-    if (newSelected.has(email.id)) {
-      newSelected.delete(email.id);
-    } else {
-      newSelected.add(email.id);
-    }
-    setSelectedEmails(newSelected);
+    toggleEmailSelection(email.id);
   };
 
   const handleDrawerClose = () => {
@@ -72,42 +95,26 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
   const handleDeleteEmail = async (emailId: number) => {
     if (onDelete) {
       onDelete(emailId);
-      // 如果删除的是当前选中的邮件，清除选中状态
-      if (selectedEmail?.id === emailId) {
-        setSelectedEmail(null);
-      }
     }
   };
 
   const handleSelectAll = () => {
     if (selectedEmails.size === sortedEmails.length) {
-      setSelectedEmails(new Set());
+      clearSelection();
     } else {
-      setSelectedEmails(new Set(sortedEmails.map(email => email.id)));
+      selectAllEmails();
     }
   };
 
   const handleBatchDelete = async () => {
     if (onBatchDelete && selectedEmails.size > 0) {
       onBatchDelete(Array.from(selectedEmails));
-      setSelectedEmails(new Set());
-      // 如果删除的邮件包含当前选中的邮件，清除选中状态
-      if (selectedEmail && selectedEmails.has(selectedEmail.id)) {
-        setSelectedEmail(null);
-      }
     }
   };
 
   const handleClearSelection = () => {
-    setSelectedEmails(new Set());
+    clearSelection();
   };
-
-  // 按日期降序排列邮件（较新的在前）
-  const sortedEmails = [...emails].sort((a, b) => {
-    const dateA = a.sentAt ? new Date(a.sentAt).getTime() : 0;
-    const dateB = b.sentAt ? new Date(b.sentAt).getTime() : 0;
-    return dateB - dateA;
-  });
 
   const isAllSelected = selectedEmails.size === sortedEmails.length && sortedEmails.length > 0;
   const hasSelection = selectedEmails.size > 0;
@@ -214,25 +221,25 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
           </div>
 
           {/* 邮件列表 */}
-          <ScrollArea className="flex-1 overflow-y-auto">
-            {loading && emails.length === 0 ? (
-              // 加载骨架屏
-              <div className="divide-y divide-border">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="px-6 py-5 animate-pulse">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-full bg-muted flex-shrink-0"></div>
-                      <div className="flex-1 min-w-0 space-y-3">
-                        <div className="h-4 bg-muted rounded w-3/4"></div>
-                        <div className="h-3 bg-muted rounded w-1/2"></div>
-                        <div className="h-10 bg-muted rounded"></div>
+          <div className="flex-1 overflow-hidden">
+            {loading && sortedEmails.length === 0 ? (
+              <ScrollArea className="h-full">
+                <div className="divide-y divide-border">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="px-6 py-5 animate-pulse">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-muted flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0 space-y-3">
+                          <div className="h-4 bg-muted rounded w-3/4"></div>
+                          <div className="h-3 bg-muted rounded w-1/2"></div>
+                          <div className="h-10 bg-muted rounded"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ScrollArea>
             ) : sortedEmails.length === 0 ? (
-              // 空状态
               <div className="flex flex-col items-center justify-center h-full text-center p-8">
                 <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4 flex-shrink-0">
                   <Mail className="h-10 w-10 text-muted-foreground" />
@@ -247,24 +254,17 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
                 </Button>
               </div>
             ) : (
-              <div className="divide-y divide-border">
-                {sortedEmails.map((email, i) => (
-                  <EmailListItem
-                    key={email.id}
-                    email={email}
-                    index={i}
-                    isSelected={selectedEmail?.id === email.id}
-                    copiedId={copiedId}
-                    setCopiedId={setCopiedId}
-                    onClick={handleEmailClick}
-                    onDelete={handleDeleteEmail}
-                    onAvatarClick={handleAvatarClick}
-                    isEmailSelected={selectedEmails.has(email.id)}
-                  />
-                ))}
-              </div>
+              <>
+                <VirtualizedEmailList
+                  emails={sortedEmails}
+                  onEmailClick={handleEmailClick}
+                  onDelete={handleDeleteEmail}
+                  onAvatarClick={handleAvatarClick}
+                />
+                <div ref={sentinelRef} className="h-1 w-full" aria-hidden />
+              </>
             )}
-          </ScrollArea>
+          </div>
         </div>
 
         {/* 右侧详情面板（桌面端） */}
