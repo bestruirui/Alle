@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./react-virtualized.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -134,4 +133,13 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* React Virtualized样式内联 - 去除外部依赖 */
+.ReactVirtualized__List {
+  outline: none;
+}
+
+.ReactVirtualized__Grid__innerScrollContainer {
+  overflow: visible !important;
 }

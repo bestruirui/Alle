@@ -1,8 +1,0 @@
-/* React Virtualized styles */
-.ReactVirtualized__List {
-  outline: none;
-}
-
-.ReactVirtualized__Grid__innerScrollContainer {
-  overflow: visible !important;
-}

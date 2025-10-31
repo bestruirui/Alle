@@ -56,7 +56,7 @@ export const useEmailListInfinite = (token: string | null) => {
           total: result.total,
           nextOffset: pageParam + result.emails.length,
         };
-      } catch (error) {
+      } catch {
         setOffline(true);
         // Fallback to local DB
         const localEmails = await localEmailDB.list(50, pageParam);
