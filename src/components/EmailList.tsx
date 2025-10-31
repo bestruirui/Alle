@@ -50,12 +50,13 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
     (email: Email) => {
       startTransition(() => {
         selectEmail(email.id);
+        setSettingsOpen(false);
       });
       if (isMobile) {
         setIsMobileDrawerOpen(true);
       }
     },
-    [isMobile, selectEmail],
+    [isMobile, selectEmail, setSettingsOpen],
   );
 
   const handleAvatarToggle = useCallback((email: Email, event: MouseEvent) => {
@@ -103,11 +104,11 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
       setMobileSettingsOpen(true);
     } else {
       startTransition(() => {
-        setSettingsOpen(!settingsOpen);
+        setSettingsOpen(true);
         selectEmail(null);
       });
     }
-  }, [isMobile, selectEmail, setSettingsOpen, settingsOpen]);
+  }, [isMobile, selectEmail, setSettingsOpen]);
 
   const handleCloseSettings = useCallback(() => {
     if (isMobile) {
