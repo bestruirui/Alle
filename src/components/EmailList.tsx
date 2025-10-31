@@ -35,9 +35,21 @@ interface EmailListProps {
   onRefresh: () => void;
   onDelete?: (emailId: number) => void;
   onBatchDelete?: (emailIds: number[]) => void;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
+  isLoadingMore?: boolean;
 }
 
-export default function EmailList({ emails, loading, onRefresh, onDelete, onBatchDelete }: EmailListProps) {
+export default function EmailList({ 
+  emails, 
+  loading, 
+  onRefresh, 
+  onDelete, 
+  onBatchDelete,
+  hasMore,
+  onLoadMore,
+  isLoadingMore,
+}: EmailListProps) {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -247,22 +259,38 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
                 </Button>
               </div>
             ) : (
-              <div className="divide-y divide-border">
-                {sortedEmails.map((email, i) => (
-                  <EmailListItem
-                    key={email.id}
-                    email={email}
-                    index={i}
-                    isSelected={selectedEmail?.id === email.id}
-                    copiedId={copiedId}
-                    setCopiedId={setCopiedId}
-                    onClick={handleEmailClick}
-                    onDelete={handleDeleteEmail}
-                    onAvatarClick={handleAvatarClick}
-                    isEmailSelected={selectedEmails.has(email.id)}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="divide-y divide-border">
+                  {sortedEmails.map((email, i) => (
+                    <EmailListItem
+                      key={email.id}
+                      email={email}
+                      index={i}
+                      isSelected={selectedEmail?.id === email.id}
+                      copiedId={copiedId}
+                      setCopiedId={setCopiedId}
+                      onClick={handleEmailClick}
+                      onDelete={handleDeleteEmail}
+                      onAvatarClick={handleAvatarClick}
+                      isEmailSelected={selectedEmails.has(email.id)}
+                    />
+                  ))}
+                </div>
+                
+                {/* 加载更多按钮 */}
+                {hasMore && onLoadMore && (
+                  <div className="px-6 py-4 border-t border-border">
+                    <Button
+                      onClick={onLoadMore}
+                      disabled={isLoadingMore}
+                      variant="outline"
+                      className="w-full rounded-xl"
+                    >
+                      {isLoadingMore ? "加载中..." : "加载更多"}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </ScrollArea>
         </div>
