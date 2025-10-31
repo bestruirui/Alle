@@ -46,3 +46,7 @@ next-env.d.ts
 .claude
 .serena
 .mcp.json
+
+# PWA files
+public/sw.js
+public/workbox-*.js
