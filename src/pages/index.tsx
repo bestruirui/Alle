@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
-import EmailList from "@/components/EmailList";
-import { ThemeSynchronizer } from "@/components/ThemeSynchronizer";
+import EmailList from "@/components/email/list/EmailList";
 import { useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import { useEmailStore } from "@/lib/store/email";
 
@@ -10,7 +9,6 @@ function EmailInboxContent({ token }: { token: string }) {
   const { data, isLoading, isFetching, refetch, fetchNextPage, hasNextPage } = useEmailListInfinite(token);
   const emails = useEmailStore((state) => state.emails);
 
-  // Sync store with query data
   useEffect(() => {
     if (data) {
       const allEmails = data.pages.flatMap((page) => page.emails);
@@ -21,22 +19,12 @@ function EmailInboxContent({ token }: { token: string }) {
     }
   }, [data]);
 
-  const handleRefresh = () => {
-    refetch();
-  };
-
-  const handleLoadMore = () => {
-    if (hasNextPage && !isFetching) {
-      fetchNextPage();
-    }
-  };
-
   return (
     <EmailList
       emails={emails}
       loading={isLoading || isFetching}
-      onRefresh={handleRefresh}
-      onLoadMore={handleLoadMore}
+      onRefresh={refetch}
+      onLoadMore={hasNextPage && !isFetching ? fetchNextPage : undefined}
       hasMore={hasNextPage}
       token={token}
     />
@@ -62,18 +50,8 @@ export default function Home() {
     setIsAuthenticated(true);
   };
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
+  if (isLoading) return <LoadingPage />;
+  if (!isAuthenticated || !authToken) return <LoginPage onLoginSuccess={handleLoginSuccess} />;
 
-  if (!isAuthenticated || !authToken) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  return (
-    <>
-      <ThemeSynchronizer />
-      <EmailInboxContent token={authToken} />
-    </>
-  );
+  return <EmailInboxContent token={authToken} />;
 }
