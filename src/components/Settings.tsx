@@ -8,7 +8,7 @@ import { useSettingsStore } from "@/lib/store/settings";
 import { useTranslation } from "@/lib/i18n";
 import { X, Settings as SettingsIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface SettingsProps {
   onClose?: () => void;
@@ -43,13 +43,13 @@ export function Settings({ onClose }: SettingsProps) {
     setAutoRefreshInterval(interval);
   };
 
-  const intervalOptions = [
+  const intervalOptions = useMemo(() => [
     { label: t('never'), value: 0 },
     { label: `10 ${t('seconds')}`, value: 10000 },
     { label: `30 ${t('seconds')}`, value: 30000 },
     { label: `1 ${t('minutes')}`, value: 60000 },
     { label: `5 ${t('minutes')}`, value: 300000 },
-  ];
+  ], [t]);
 
   return (
     <div className="flex flex-col h-full bg-background">
