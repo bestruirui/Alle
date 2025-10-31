@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
-import EmailListVirtualized from "@/components/EmailListVirtualized";
+import EmailList from "@/components/EmailList";
 import { ThemeSynchronizer } from "@/components/ThemeSynchronizer";
 import { useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import { useEmailStore } from "@/lib/store/email";
@@ -32,7 +32,7 @@ function EmailInboxContent({ token }: { token: string }) {
   };
 
   return (
-    <EmailListVirtualized
+    <EmailList
       emails={emails}
       loading={isLoading || isFetching}
       onRefresh={handleRefresh}
