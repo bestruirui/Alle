@@ -406,7 +406,7 @@ export default function EmailListVirtualized({
 
         {/* Right panel - Desktop */}
         <div className="hidden md:flex flex-1 bg-background overflow-hidden">
-          <div className="w-full max-w-5xl mx-auto">
+          <div className="w-full max-w-5xl h-full mx-auto">
             {settingsOpen ? (
               <Settings onClose={handleSettingsClose} />
             ) : (

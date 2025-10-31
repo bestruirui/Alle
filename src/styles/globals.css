@@ -134,4 +134,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Fix Radix UI ScrollArea viewport to properly handle flex layouts */
+  [data-slot="scroll-area-viewport"] {
+    height: 100%;
+  }
+
+  /* Ensure ScrollArea viewport content can overflow */
+  [data-slot="scroll-area-viewport"] > * {
+    display: block;
+  }
 }

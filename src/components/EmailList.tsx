@@ -214,7 +214,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
           </div>
 
           {/* 邮件列表 */}
-          <ScrollArea className="flex-1">
+          <ScrollArea className="flex-1 h-0">
             {loading && emails.length === 0 ? (
               // 加载骨架屏
               <div className="divide-y divide-border">
@@ -269,7 +269,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
 
         {/* 右侧详情面板（桌面端） */}
         <div className="hidden md:flex flex-1 bg-background justify-center overflow-hidden">
-          <div className="w-full max-w-5xl">
+          <div className="w-full max-w-5xl h-full">
             <EmailDetail email={selectedEmail} />
           </div>
         </div>
