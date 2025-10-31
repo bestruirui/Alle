@@ -214,57 +214,59 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
           </div>
 
           {/* 邮件列表 */}
-          <ScrollArea className="flex-1">
-            {loading && emails.length === 0 ? (
-              // 加载骨架屏
-              <div className="divide-y divide-border">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="px-6 py-5 animate-pulse">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-full bg-muted flex-shrink-0"></div>
-                      <div className="flex-1 min-w-0 space-y-3">
-                        <div className="h-4 bg-muted rounded w-3/4"></div>
-                        <div className="h-3 bg-muted rounded w-1/2"></div>
-                        <div className="h-10 bg-muted rounded"></div>
+          <div className="flex-1 min-h-0">
+            <ScrollArea className="h-full overflow-hidden">
+              {loading && emails.length === 0 ? (
+                // 加载骨架屏
+                <div className="divide-y divide-border">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="px-6 py-5 animate-pulse">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-muted flex-shrink-0"></div>
+                        <div className="flex-1 min-w-0 space-y-3">
+                          <div className="h-4 bg-muted rounded w-3/4"></div>
+                          <div className="h-3 bg-muted rounded w-1/2"></div>
+                          <div className="h-10 bg-muted rounded"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : sortedEmails.length === 0 ? (
-              // 空状态
-              <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4 flex-shrink-0">
-                  <Mail className="h-10 w-10 text-muted-foreground" />
+                  ))}
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">暂无邮件</h3>
-                <p className="text-sm text-muted-foreground max-w-sm mb-6">
-                  您的收件箱目前是空的，点击刷新按钮获取最新邮件
-                </p>
-                <Button onClick={onRefresh} className="rounded-xl flex-shrink-0">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  刷新邮件
-                </Button>
-              </div>
-            ) : (
-              <div className="divide-y divide-border">
-                {sortedEmails.map((email, i) => (
-                  <EmailListItem
-                    key={email.id}
-                    email={email}
-                    index={i}
-                    isSelected={selectedEmail?.id === email.id}
-                    copiedId={copiedId}
-                    setCopiedId={setCopiedId}
-                    onClick={handleEmailClick}
-                    onDelete={handleDeleteEmail}
-                    onAvatarClick={handleAvatarClick}
-                    isEmailSelected={selectedEmails.has(email.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </ScrollArea>
+              ) : sortedEmails.length === 0 ? (
+                // 空状态
+                <div className="flex flex-col items-center justify-center min-h-full text-center p-8">
+                  <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4 flex-shrink-0">
+                    <Mail className="h-10 w-10 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">暂无邮件</h3>
+                  <p className="text-sm text-muted-foreground max-w-sm mb-6">
+                    您的收件箱目前是空的，点击刷新按钮获取最新邮件
+                  </p>
+                  <Button onClick={onRefresh} className="rounded-xl flex-shrink-0">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    刷新邮件
+                  </Button>
+                </div>
+              ) : (
+                <div className="divide-y divide-border">
+                  {sortedEmails.map((email, i) => (
+                    <EmailListItem
+                      key={email.id}
+                      email={email}
+                      index={i}
+                      isSelected={selectedEmail?.id === email.id}
+                      copiedId={copiedId}
+                      setCopiedId={setCopiedId}
+                      onClick={handleEmailClick}
+                      onDelete={handleDeleteEmail}
+                      onAvatarClick={handleAvatarClick}
+                      isEmailSelected={selectedEmails.has(email.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </div>
         </div>
 
         {/* 右侧详情面板（桌面端） */}

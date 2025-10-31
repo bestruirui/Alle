@@ -67,7 +67,6 @@ export default function EmailListVirtualized({
   const settingsOpen = useEmailStore((state) => state.settingsOpen);
   const setSettingsOpen = useEmailStore((state) => state.setSettingsOpen);
   const formattedTimes = useEmailStore((state) => state.formattedTimes);
-  const setVisibleEmailId = useEmailStore((state) => state.setVisibleEmailId);
   const total = useEmailStore((state) => state.total);
   const isOfflineStore = useEmailStore((state) => state.isOffline);
   const listRef = useRef<List | null>(null);
@@ -223,7 +222,16 @@ export default function EmailListVirtualized({
         </CellMeasurer>
       );
     },
-    [emails, selectedEmailId, copiedId, selectedEmails, formattedTimes]
+    [
+      emails,
+      selectedEmailId,
+      copiedId,
+      selectedEmails,
+      formattedTimes,
+      handleEmailClick,
+      handleDeleteEmail,
+      handleAvatarClick,
+    ]
   );
 
   useEffect(() => {
