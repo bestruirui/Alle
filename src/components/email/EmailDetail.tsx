@@ -91,7 +91,7 @@ export function EmailDetail({ email, onClose }: EmailDetailProps) {
       </div>
 
       {/* 内容区域 */}
-      <ScrollArea className="flex-1 overflow-y-auto">
+      <ScrollArea className="flex-1">
         <div className="p-6 space-y-6">
           {/* 邮件正文 */}
           <EmailContent
