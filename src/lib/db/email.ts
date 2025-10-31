@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { inArray, desc } from 'drizzle-orm';
+import { inArray, desc, count } from 'drizzle-orm';
 import { getDb, getDbFromEnv } from './common';
-import type { Email, NewEmail } from '@/types';
+import type { Email, EmailList, NewEmail } from '@/types';
 
 const email = sqliteTable('email', {
   id: integer('id').primaryKey(),
@@ -24,7 +24,7 @@ const email = sqliteTable('email', {
 });
 
 const emailDB = {
-  async list(limit: number, offset: number): Promise<Email[]> {
+  async list(limit: number, offset: number): Promise<EmailList> {
     const db = getDb();
     const rows = await db
       .select()
@@ -32,7 +32,12 @@ const emailDB = {
       .orderBy(desc(email.sentAt))
       .limit(limit)
       .offset(offset);
-    return rows;
+    const total = await db.select({ count: count() }).from(email);
+    return {
+      items: rows as Email[],
+      total: total[0]?.count || 0,
+      end: offset + rows.length >= (total[0]?.count || 0),
+    };
   },
   async delete(items: number[] = []): Promise<void> {
     const db = getDb();

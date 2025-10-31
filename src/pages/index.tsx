@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/EmailList";
-import type { Email, ApiResponse } from "@/types";
+import type { Email, EmailList as EmailListType, ApiResponse } from "@/types";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [authToken, setAuthToken] = useState<string | null>(null);
-  const [emails, setEmails] = useState<Email[]>([]);
+  const [emails, setEmails] = useState<EmailListType>({ items: [], total: 0, end: false });
   const [refreshing, setRefreshing] = useState(false);
 
   // 检查登录状态
@@ -32,7 +32,7 @@ export default function Home() {
         },
       });
 
-      const data = (await response.json()) as ApiResponse<Email[]>;
+      const data = (await response.json()) as ApiResponse<EmailListType>;
 
       if (data.success && data.data) {
         setEmails(data.data);
@@ -66,7 +66,7 @@ export default function Home() {
         Authorization: `Bearer ${authToken}`,
       },
     })
-      .then((res) => res.json() as Promise<ApiResponse<Email[]>>)
+      .then((res) => res.json() as Promise<ApiResponse<EmailListType>>)
       .then((data) => {
         if (data.success && data.data) {
           setEmails(data.data);
@@ -83,7 +83,7 @@ export default function Home() {
   // 删除单个邮件
   const handleDeleteEmail = async (emailId: number) => {
     if (!authToken) return;
-    
+
     try {
       const response = await fetch("/api/email/delete", {
         method: "DELETE",
@@ -95,10 +95,10 @@ export default function Home() {
       });
 
       const data = await response.json() as ApiResponse<null>;
-      
+
       if (data.success) {
         // 从本地状态中移除已删除的邮件
-        setEmails(prevEmails => prevEmails.filter(email => email.id !== emailId));
+        setEmails(prevEmails => ({ ...prevEmails, items: prevEmails.items.filter((email: Email) => email.id !== emailId) }));
       } else {
         console.error("Failed to delete email:", data.error);
       }
@@ -110,7 +110,7 @@ export default function Home() {
   // 批量删除邮件
   const handleBatchDeleteEmails = async (emailIds: number[]) => {
     if (!authToken || emailIds.length === 0) return;
-    
+
     try {
       const response = await fetch("/api/email/delete", {
         method: "DELETE",
@@ -122,10 +122,10 @@ export default function Home() {
       });
 
       const data = await response.json() as ApiResponse<null>;
-      
+
       if (data.success) {
         // 从本地状态中移除已删除的邮件
-        setEmails(prevEmails => prevEmails.filter(email => !emailIds.includes(email.id)));
+        setEmails(prevEmails => ({ ...prevEmails, items: prevEmails.items.filter((email: Email) => !emailIds.includes(email.id)) }));
       } else {
         console.error("Failed to delete emails:", data.error);
       }
@@ -146,9 +146,9 @@ export default function Home() {
 
   // 显示邮件列表
   return (
-    <EmailList 
-      emails={emails} 
-      loading={refreshing} 
+    <EmailList
+      emails={emails.items}
+      loading={refreshing}
       onRefresh={handleRefresh}
       onDelete={handleDeleteEmail}
       onBatchDelete={handleBatchDeleteEmails}

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { success, failure } from '@/types';
 import { withAuth } from '@/lib/auth/auth';
 import emailDB from '@/lib/db/email';
-import type { Email } from '@/types';
+import type { EmailList } from '@/types';
 
 async function listHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -29,7 +29,7 @@ async function listHandler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const data = await emailDB.list(limitNum, offsetNum);
-    return success<Email[]>(res, data, 200);
+    return success<EmailList>(res, data, 200);
   } catch (e) {
     console.error('Failed to fetch emails:', e);
     const errorMessage = e instanceof Error ? e.message : String(e);

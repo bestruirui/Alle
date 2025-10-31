@@ -22,6 +22,14 @@ export interface Email {
   extractResult: string | null;
 }
 
+
+export interface EmailList {
+  items: Email[];
+  total: number;
+  end: boolean;
+}
+
+
 export type NewEmail = Omit<Email, 'id'>;
 
 // ====================
