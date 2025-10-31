@@ -10,28 +10,25 @@ async function listHandler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const { limit, offset } = req.query;
+  let limitNum: number = 100;
+  let offsetNum: number = 0;
 
   if (limit !== undefined) {
-    const limitNum = Number(limit);
+    limitNum = Number(limit);
     if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
       return failure(res, 'Limit must be a number between 1 and 100', 400);
     }
   }
 
   if (offset !== undefined) {
-    const offsetNum = Number(offset);
+    offsetNum = Number(offset);
     if (isNaN(offsetNum) || offsetNum < 0) {
       return failure(res, 'Offset must be a non-negative number', 400);
     }
   }
 
-  const params = {
-    limit: limit ? Number(limit) : 100,
-    offset: offset ? Number(offset) : 0,
-  };
-
   try {
-    const data = await emailDB.list(params);
+    const data = await emailDB.list(limitNum, offsetNum);
     return success<Email[]>(res, data, 200);
   } catch (e) {
     console.error('Failed to fetch emails:', e);

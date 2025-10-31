@@ -36,12 +36,3 @@ export const failure = (
     error,
   });
 };
-
-// ====================
-// API 查询参数类型
-// ====================
-
-export interface ListParams {
-  limit?: number;
-  offset?: number;
-}
