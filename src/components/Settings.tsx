@@ -8,7 +8,6 @@ import { useSettingsStore } from "@/lib/store/settings";
 import { useTranslation } from "@/lib/i18n";
 import { X, Settings as SettingsIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect } from "react";
 
 interface SettingsProps {
   onClose?: () => void;
@@ -16,20 +15,16 @@ interface SettingsProps {
 
 export function Settings({ onClose }: SettingsProps) {
   const { t } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
   const {
+    theme: storedTheme,
     language: storedLanguage,
     autoRefreshInterval,
     setLanguage,
     setAutoRefreshInterval,
+    setTheme: setStoredTheme,
   } = useSettingsStore();
 
-  // Sync theme from useTheme hook with settings store
-  useEffect(() => {
-    if (theme && ['light', 'dark', 'system'].includes(theme)) {
-      useSettingsStore.getState().setTheme(theme as 'light' | 'dark' | 'system');
-    }
-  }, [theme]);
 
   const handleLanguageChange = (newLanguage: 'zh' | 'en') => {
     setLanguage(newLanguage);
@@ -37,6 +32,7 @@ export function Settings({ onClose }: SettingsProps) {
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
+    setStoredTheme(newTheme);
   };
 
   const handleIntervalChange = (interval: number) => {
@@ -100,7 +96,7 @@ export function Settings({ onClose }: SettingsProps) {
                   {['light', 'dark', 'system'].map((themeOption) => (
                     <Button
                       key={themeOption}
-                      variant={theme === themeOption ? 'default' : 'outline'}
+                      variant={storedTheme === themeOption ? 'default' : 'outline'}
                       onClick={() => handleThemeChange(themeOption as 'light' | 'dark' | 'system')}
                       className="rounded-xl"
                     >

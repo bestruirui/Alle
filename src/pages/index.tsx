@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/EmailList";
-import { ThemeSynchronizer } from "@/components/ThemeSynchronizer";
 import { useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import { useEmailStore } from "@/lib/store/email";
 
@@ -71,9 +70,6 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <ThemeSynchronizer />
-      <EmailInboxContent token={authToken} />
-    </main>
+    <EmailInboxContent token={authToken} />
   );
 }
