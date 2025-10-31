@@ -71,9 +71,9 @@ export default function Home() {
   }
 
   return (
-    <>
+    <main>
       <ThemeSynchronizer />
       <EmailInboxContent token={authToken} />
-    </>
+    </main>
   );
 }

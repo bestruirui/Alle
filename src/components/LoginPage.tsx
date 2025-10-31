@@ -3,17 +3,18 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Field,
-  FieldLabel,
-  FieldError,
-  FieldGroup,
-} from "@/components/ui/field";
+import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field";
 import type { ApiResponse, LoginResponseData } from "@/types";
 
 interface LoginPageProps {
   onLoginSuccess: (token: string) => void;
 }
+
+const ANIMATION_CONFIG = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4 },
+};
 
 export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [username, setUsername] = useState("");
@@ -22,28 +23,25 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [error, setError] = useState("");
   const [trustDevice, setTrustDevice] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError("");
     setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username,
           password,
-          expired: trustDevice ? 'none' : undefined
+          expired: trustDevice ? "none" : undefined,
         }),
       });
 
       const data = (await response.json()) as ApiResponse<LoginResponseData>;
 
       if (data.success && data.data) {
-        // 保存 token 到 localStorage
         localStorage.setItem("auth_token", data.data.token);
         onLoginSuccess(data.data.token);
       } else {
@@ -57,17 +55,10 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md"
-      >
+    <main className="min-h-screen bg-background flex items-center justify-center px-4">
+      <motion.div {...ANIMATION_CONFIG} className="w-full max-w-md">
         <div className="bg-card rounded-lg shadow-lg p-8">
-          <h1 className="text-2xl font-bold text-foreground mb-6 text-center">
-            Alle
-          </h1>
+          <h1 className="text-2xl font-bold text-foreground mb-6 text-center">Alle</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <FieldGroup>
@@ -77,7 +68,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                   id="username"
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(event) => setUsername(event.target.value)}
                   placeholder="请输入用户名"
                   required
                   disabled={loading}
@@ -90,7 +81,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
                   placeholder="请输入密码"
                   required
                   disabled={loading}
@@ -104,29 +95,20 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
                   onCheckedChange={(checked) => setTrustDevice(checked === true)}
                   disabled={loading}
                 />
-                <FieldLabel
-                  htmlFor="trustDevice"
-                  className="cursor-pointer select-none"
-                >
+                <FieldLabel htmlFor="trustDevice" className="cursor-pointer select-none">
                   信任此设备（Token 永不过期）
                 </FieldLabel>
               </Field>
             </FieldGroup>
 
-            {error && (
-              <FieldError>{error}</FieldError>
-            )}
+            {error && <FieldError>{error}</FieldError>}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "登录中..." : "登录"}
             </Button>
           </form>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

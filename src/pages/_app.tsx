@@ -7,17 +7,15 @@ import { QueryProvider } from '@/provider/Query'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Head>
-        <title>Alle</title>
-      </Head>
-      <QueryProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <DeviceProvider>
-            <Component {...pageProps} />
-          </DeviceProvider>
-        </ThemeProvider>
-      </QueryProvider>
-    </>
+    <QueryProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <DeviceProvider>
+          <Head>
+            <title>Alle</title>
+          </Head>
+          <Component {...pageProps} />
+        </DeviceProvider>
+      </ThemeProvider>
+    </QueryProvider>
   )
 }
