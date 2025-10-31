@@ -43,3 +43,10 @@ next-env.d.ts
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# PWA files (generated during build)
+/public/sw.js
+/public/workbox-*.js
+
+# log files
+*.log

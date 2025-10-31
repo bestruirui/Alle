@@ -113,11 +113,10 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
   const hasSelection = selectedEmails.size > 0;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* 双栏布局容器 */}
-      <div className="flex h-screen overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* 左侧邮件列表 */}
-        <div className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden">
+        <div className="flex w-full flex-1 flex-col min-h-0 overflow-hidden border-r border-border bg-card md:w-[420px] lg:w-[480px] md:flex-none">
           {/* 列表头部 */}
           <div className="flex-shrink-0 px-6 py-5 border-b border-border bg-card/95 backdrop-blur-sm">
             <div className="flex items-center justify-between">
@@ -214,7 +213,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
           </div>
 
           {/* 邮件列表 */}
-          <ScrollArea className="flex-1 overflow-y-auto">
+          <ScrollArea className="flex-1 min-h-0">
             {loading && emails.length === 0 ? (
               // 加载骨架屏
               <div className="divide-y divide-border">
@@ -268,7 +267,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
         </div>
 
         {/* 右侧详情面板（桌面端） */}
-        <div className="hidden md:flex flex-1 bg-background justify-center overflow-hidden">
+        <div className="hidden md:flex flex-1 min-h-0 bg-background justify-center overflow-hidden">
           <div className="w-full max-w-5xl">
             <EmailDetail email={selectedEmail} />
           </div>
