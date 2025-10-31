@@ -81,7 +81,7 @@ export function Settings({ onClose }: SettingsProps) {
       </div>
 
       {/* Content */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 overflow-hidden">
         <div className="p-6 space-y-6">
           {/* Appearance Section */}
           <div className="space-y-4">

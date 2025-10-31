@@ -214,7 +214,7 @@ export default function EmailList({ emails, loading, onRefresh, onDelete, onBatc
           </div>
 
           {/* 邮件列表 */}
-          <ScrollArea className="flex-1 overflow-y-auto">
+          <ScrollArea className="flex-1 overflow-hidden">
             {loading && emails.length === 0 ? (
               // 加载骨架屏
               <div className="divide-y divide-border">
