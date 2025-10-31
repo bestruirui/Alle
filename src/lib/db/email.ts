@@ -35,6 +35,12 @@ const emailDB = {
       .offset(offset);
     return rows;
   },
+
+  async count(): Promise<number> {
+    const db = getDb();
+    const result = await db.select({ count: sql<number>`count(*)` }).from(email);
+    return result[0]?.count || 0;
+  },
   async delete(items: number[] = []): Promise<void> {
     const db = getDb();
     await db.delete(email).where(inArray(email.id, items));

@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 import withPWA from "next-pwa";
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
-initOpenNextCloudflareForDev()
+if (process.env.NODE_ENV === 'development') {
+  void initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   /* config options here */
