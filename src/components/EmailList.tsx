@@ -16,13 +16,14 @@ import { Settings } from "@/components/Settings";
 interface EmailListProps {
   emails: Email[];
   loading: boolean;
+  refreshing?: boolean;
   onRefresh: () => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
   token: string | null;
 }
 
-export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasMore = false, token }: EmailListProps) {
+export default function EmailList({ emails, loading, refreshing = false, onRefresh, onLoadMore, hasMore = false, token }: EmailListProps) {
   const { isMobile } = useDevice();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -129,7 +130,7 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
             selectionCount={selectedEmails.size}
             totalCount={total}
             isAllSelected={isAllSelected}
-            loading={loading}
+            loading={loading || refreshing}
             onRefresh={onRefresh}
             onToggleSelectAll={handleToggleSelectAll}
             onBatchDelete={handleBatchDelete}

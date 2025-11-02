@@ -4,12 +4,14 @@ import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/EmailList";
 import { useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import { useEmailStore } from "@/lib/store/email";
+import { useLocalEmailCache } from "@/lib/hooks/useLocalEmailCache";
 
 function EmailInboxContent({ token }: { token: string }) {
+  useLocalEmailCache();
+
   const { data, isLoading, isFetching, refetch, fetchNextPage, hasNextPage } = useEmailListInfinite(token);
   const emails = useEmailStore((state) => state.emails);
 
-  // Sync store with query data
   useEffect(() => {
     if (data) {
       const allEmails = data.pages.flatMap((page) => page.emails);
@@ -30,10 +32,13 @@ function EmailInboxContent({ token }: { token: string }) {
     }
   };
 
+  const showLoading = isLoading && emails.length === 0;
+
   return (
     <EmailList
       emails={emails}
-      loading={isLoading || isFetching}
+      loading={showLoading}
+      refreshing={isFetching}
       onRefresh={handleRefresh}
       onLoadMore={handleLoadMore}
       hasMore={hasNextPage}
