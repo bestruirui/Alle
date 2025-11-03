@@ -38,11 +38,16 @@ export function EmailListContent({
     getScrollElement: () => parentRef.current,
     estimateSize: () => 120,
     overscan: 8,
+    measureElement: (element) => element?.getBoundingClientRect().height ?? 0,
     getItemKey: (index) => {
       const email = emails[index];
       return email ? `email-${email.id}` : `loader-${index}`;
     },
   });
+
+  useEffect(() => {
+    virtualizer.measure();
+  }, [virtualizer, emails.length]);
 
   const virtualItems = virtualizer.getVirtualItems();
 
@@ -95,7 +100,6 @@ export function EmailListContent({
             top: 0,
             left: 0,
             width: "100%",
-            height: `${virtualItem.size}px`,
             transform: `translateY(${virtualItem.start}px)`,
           };
 
@@ -105,10 +109,10 @@ export function EmailListContent({
                 key={virtualItem.key}
                 data-index={virtualItem.index}
                 ref={virtualizer.measureElement}
-                style={style}
+                style={{ ...style, height: 96 }}
                 className="px-4 py-3"
               >
-                <div className="animate-pulse space-y-3">
+                <div className="space-y-3 animate-pulse">
                   <div className="h-4 w-3/4 rounded bg-muted" />
                   <div className="h-3 w-1/2 rounded bg-muted" />
                 </div>
@@ -125,6 +129,7 @@ export function EmailListContent({
             >
               <EmailListItem
                 email={email}
+                index={virtualItem.index}
                 isSelected={selectedEmailId === email.id}
                 isEmailSelected={selectedEmails.has(email.id)}
                 copiedId={copiedId}
