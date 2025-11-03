@@ -91,7 +91,7 @@ export function getProviderLogo(address: string | null): string | null {
 
   for (const [keyword, logoName] of Object.entries(providerKeywordMap)) {
     if (lower.includes(keyword)) {
-      return `/provider/${logoName}.svg`;
+      return `/image/provider/${logoName}.svg`;
     }
   }
 

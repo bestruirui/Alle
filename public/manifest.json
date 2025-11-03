@@ -14,25 +14,25 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/image/icon/192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/image/icon/512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icon-maskable-192x192.png",
+      "src": "/image/icon/192x192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icon-maskable-512x512.png",
+      "src": "/image/icon/512x512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -40,14 +40,14 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-mobile-1.png",
+      "src": "/image/screenshot/mobile-1.png",
       "sizes": "1290x2796",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "登录页面"
     },
     {
-      "src": "/screenshot-desktop-1.png",
+      "src": "/image/screenshot/desktop-1.png",
       "sizes": "1110x678",
       "type": "image/png",
       "form_factor": "wide",

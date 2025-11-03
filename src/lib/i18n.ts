@@ -11,7 +11,7 @@ export const loadTranslations = async (locale: string): Promise<Translations> =>
   }
 
   try {
-    const response = await fetch(`/locales/${locale}/common.json`);
+    const response = await fetch(`/locales/${locale}.json`);
     const data = (await response.json()) as Translations;
     translations[locale] = data;
     return data;
