@@ -30,6 +30,7 @@ export function EmailListContent({
 }: EmailListContentProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const loadMoreTriggeredRef = useRef(false);
+  const emailIdsRef = useRef<string>("");
 
   const itemCount = useMemo(() => (hasMore ? emails.length + 1 : emails.length), [emails.length, hasMore]);
 
@@ -45,9 +46,21 @@ export function EmailListContent({
     },
   });
 
+  // 检测 emails 数组的实际内容变化（特别是删除操作）
   useEffect(() => {
-    virtualizer.measure();
-  }, [virtualizer, emails.length]);
+    const currentEmailIds = emails.map((e) => e.id).join(",");
+    const previousEmailIds = emailIdsRef.current;
+
+    // 如果邮件 ID 序列发生变化（删除、新增、重排），强制重新测量
+    if (currentEmailIds !== previousEmailIds && previousEmailIds !== "") {
+      // 等待 DOM 更新后再测量
+      requestAnimationFrame(() => {
+        virtualizer.measure();
+      });
+    }
+
+    emailIdsRef.current = currentEmailIds;
+  }, [emails, virtualizer]);
 
   const virtualItems = virtualizer.getVirtualItems();
 
