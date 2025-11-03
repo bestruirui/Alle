@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useSettingsStore } from "@/lib/store/settings";
-import { useTranslation } from "@/lib/i18n";
-import { X, Settings as SettingsIcon } from "lucide-react";
+import { useAuthStore } from "@/lib/store/auth";
+import { useTranslation } from "@/lib/hooks/useTranslation";
+import { X, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 
 interface SettingsProps {
@@ -16,6 +17,7 @@ interface SettingsProps {
 export function Settings({ onClose }: SettingsProps) {
   const { t } = useTranslation();
   const { setTheme } = useTheme();
+  const { logout } = useAuthStore();
   const {
     theme: storedTheme,
     language: storedLanguage,
@@ -37,6 +39,12 @@ export function Settings({ onClose }: SettingsProps) {
 
   const handleIntervalChange = (interval: number) => {
     setAutoRefreshInterval(interval);
+  };
+
+  const handleLogout = () => {
+    if (confirm(t('logoutConfirm') || '确认退出登录？')) {
+      logout();
+    }
   };
 
   const intervalOptions = [
@@ -152,6 +160,28 @@ export function Settings({ onClose }: SettingsProps) {
                     </Button>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* Account Section */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-1">{t('account')}</h3>
+                <p className="text-sm text-muted-foreground">{t('accountDesc')}</p>
+              </div>
+
+              <Separator />
+
+              {/* Logout Button */}
+              <div className="space-y-3">
+                <Button
+                  variant="destructive"
+                  onClick={handleLogout}
+                  className="w-full rounded-xl"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  {t('logout')}
+                </Button>
               </div>
             </div>
           </div>

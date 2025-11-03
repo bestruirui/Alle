@@ -7,6 +7,7 @@ import { EmailListSkeleton } from "@/components/email/list/EmailListSkeleton";
 import { EmailListEmpty } from "@/components/email/list/EmailListEmpty";
 import { EmailListItem } from "@/components/email/EmailListItem";
 import type { EmailListRenderProps } from "@/components/email/list/types";
+import { useFormatTime } from "@/lib/hooks/useFormatTime";
 
 const cache = new CellMeasurerCache({ fixedWidth: true, defaultHeight: 120 });
 
@@ -25,7 +26,6 @@ export function EmailListContent({
   onRefresh,
   selectedEmailId,
   selectedEmails,
-  formattedTimes,
   copiedId,
   onCopy,
   onEmailClick,
@@ -33,6 +33,7 @@ export function EmailListContent({
   onAvatarToggle,
 }: EmailListContentProps) {
   const listRef = useRef<List | null>(null);
+  const formatTime = useFormatTime();
 
   useEffect(() => {
     cache.clearAll();
@@ -65,6 +66,9 @@ export function EmailListContent({
         );
       }
 
+      // 按需格式化时间：仅格式化可见的邮件
+      const formattedTime = formatTime(email.sentAt);
+
       return (
         <CellMeasurer key={key} cache={cache} parent={parent} columnIndex={0} rowIndex={index}>
           {({ registerChild }) => (
@@ -79,7 +83,7 @@ export function EmailListContent({
                 index={index}
                 isSelected={selectedEmailId === email.id}
                 isEmailSelected={selectedEmails.has(email.id)}
-                formattedTime={formattedTimes[email.id]}
+                formattedTime={formattedTime}
                 copiedId={copiedId}
                 onCopy={onCopy}
                 onClick={onEmailClick}
@@ -91,7 +95,7 @@ export function EmailListContent({
         </CellMeasurer>
       );
     },
-    [copiedId, emails, formattedTimes, onAvatarToggle, onCopy, onEmailClick, onEmailDelete, selectedEmailId, selectedEmails],
+    [copiedId, emails, formatTime, onAvatarToggle, onCopy, onEmailClick, onEmailDelete, selectedEmailId, selectedEmails],
   );
 
   if (loading && emails.length === 0) {

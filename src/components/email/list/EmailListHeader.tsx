@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { RefreshCw, Settings as SettingsIcon, CheckSquare, Square, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 interface EmailListHeaderProps {
   hasSelection: boolean;
   selectionCount: number;

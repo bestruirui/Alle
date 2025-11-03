@@ -2,19 +2,16 @@
 
 import Image from "next/image";
 import { Mail, Clock, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailContent } from "@/components/email/EmailContent";
-import { formatTime } from "@/lib/utils/utils";
 import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/types";
 
 interface EmailDetailProps {
   email: Email | null;
-  onClose?: () => void;
 }
 
-export function EmailDetail({ email, onClose }: EmailDetailProps) {
+export function EmailDetail({ email }: EmailDetailProps) {
   if (!email) {
     return (
       <div className="flex items-center justify-center h-full w-full">
@@ -32,6 +29,21 @@ export function EmailDetail({ email, onClose }: EmailDetailProps) {
   }
 
   const logo = getProviderLogo(email.fromAddress);
+
+  // 格式化完整时间
+  const formatFullTime = (sentAt: string | null): string => {
+    if (!sentAt) return '';
+    const date = new Date(sentAt);
+    if (Number.isNaN(date.getTime())) return '';
+
+    return date.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -65,22 +77,10 @@ export function EmailDetail({ email, onClose }: EmailDetailProps) {
                 </p>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Clock className="h-3.5 w-3.5" />
-                  <span>{formatTime(email.sentAt)}</span>
+                  <span>{formatFullTime(email.sentAt)}</span>
                 </div>
               </div>
             </div>
-
-            {/* 关闭按钮（仅移动端） */}
-            {onClose && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="md:hidden h-10 w-10 rounded-xl"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            )}
           </div>
 
           {/* 主题 */}

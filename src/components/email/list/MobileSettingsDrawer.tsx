@@ -2,7 +2,7 @@
 
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Settings } from "@/components/Settings";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface MobileSettingsDrawerProps {
   open: boolean;

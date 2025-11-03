@@ -13,27 +13,18 @@ const dedupeEmails = (emails: Email[]): Email[] => {
   });
 };
 
-interface FormattedTimeState {
-  id: number;
-  formattedTime: string;
-}
-
 interface EmailStoreState {
   emails: Email[];
   total: number;
   hasMore: boolean;
-  formattedTimes: Record<number, string>;
   selectedEmailId: number | null;
   settingsOpen: boolean;
-  isOffline: boolean;
   lastSyncedAt: string | null;
   visibleEmailId: number | null;
   setEmails: (emails: Email[], total: number, hasMore: boolean) => void;
   appendEmails: (emails: Email[], total: number, hasMore: boolean) => void;
-  updateFormattedTimes: (formatted: FormattedTimeState[]) => void;
   selectEmail: (emailId: number | null) => void;
   setSettingsOpen: (open: boolean) => void;
-  setOffline: (offline: boolean) => void;
   setLastSyncedAt: (sentAt: string | null) => void;
   setVisibleEmailId: (emailId: number | null) => void;
   removeEmail: (emailId: number) => void;
@@ -44,10 +35,8 @@ export const useEmailStore = create<EmailStoreState>((set, get) => ({
   emails: [],
   total: 0,
   hasMore: false,
-  formattedTimes: {},
   selectedEmailId: null,
   settingsOpen: false,
-  isOffline: false,
   lastSyncedAt: null,
   visibleEmailId: null,
   setEmails: (emails, total, hasMore) => {
@@ -67,16 +56,8 @@ export const useEmailStore = create<EmailStoreState>((set, get) => ({
       lastSyncedAt: nextEmails.length ? nextEmails[0].sentAt ?? null : get().lastSyncedAt,
     });
   },
-  updateFormattedTimes: (formatted) => {
-    const next = { ...get().formattedTimes };
-    for (const item of formatted) {
-      next[item.id] = item.formattedTime;
-    }
-    set({ formattedTimes: next });
-  },
   selectEmail: (emailId) => set({ selectedEmailId: emailId }),
   setSettingsOpen: (open) => set({ settingsOpen: open }),
-  setOffline: (offline) => set({ isOffline: offline }),
   setLastSyncedAt: (sentAt) => set({ lastSyncedAt: sentAt }),
   setVisibleEmailId: (emailId) => set({ visibleEmailId: emailId }),
   removeEmail: (emailId) => {

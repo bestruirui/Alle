@@ -60,19 +60,6 @@ const pwaConfig = withPWA({
         },
       },
     },
-    {
-      urlPattern: /\/api\/.*$/i,
-      handler: "NetworkFirst",
-      method: "GET",
-      options: {
-        cacheName: "apis",
-        expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 5 * 60, // 5分钟
-        },
-        networkTimeoutSeconds: 10,
-      },
-    },
   ],
   buildExcludes: [
     "dynamic-css-manifest.json",

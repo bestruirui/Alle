@@ -47,5 +47,11 @@
   "settingsSaved": "设置已保存",
   "loadMore": "加载更多",
   "noMoreEmails": "没有更多邮件了",
-  "offlineMode": "离线模式"
+  "account": "账户",
+  "accountDesc": "管理您的账户设置",
+  "logout": "退出登录",
+  "timeJustNow": "刚刚",
+  "timeMinutesAgo": "{{minutes}}分钟前",
+  "timeHoursAgo": "{{hours}}小时前",
+  "timeDaysAgo": "{{days}}天前"
 }

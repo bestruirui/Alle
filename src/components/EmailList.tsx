@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useState, useTransition, type MouseEvent } from "react";
+import { useCallback, useState, useTransition, useEffect, type MouseEvent } from "react";
 import { useDevice } from "@/provider/Device";
 import { useEmailStore } from "@/lib/store/email";
-import { useTimeWorker } from "@/lib/hooks/useTimeWorker";
-import { useDeleteEmail, useBatchDeleteEmails } from "@/lib/hooks/useEmailApi";
+import { useDeleteEmail, useBatchDeleteEmails, useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import type { Email } from "@/types";
 import { EmailListHeader } from "@/components/email/list/EmailListHeader";
 import { EmailListContent } from "@/components/email/list/EmailListContent";
@@ -13,16 +12,7 @@ import { MobileSettingsDrawer } from "@/components/email/list/MobileSettingsDraw
 import { EmailDetail } from "@/components/email/EmailDetail";
 import { Settings } from "@/components/Settings";
 
-interface EmailListProps {
-  emails: Email[];
-  loading: boolean;
-  onRefresh: () => void;
-  onLoadMore?: () => void;
-  hasMore?: boolean;
-  token: string | null;
-}
-
-export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasMore = false, token }: EmailListProps) {
+export default function EmailList() {
   const { isMobile } = useDevice();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -30,18 +20,30 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
   const [, startTransition] = useTransition();
 
+  // 数据获取逻辑
+  const { data, isLoading, isFetching, refetch, fetchNextPage, hasNextPage } = useEmailListInfinite();
+  const emails = useEmailStore((state) => state.emails);
   const selectedEmailId = useEmailStore((state) => state.selectedEmailId);
   const selectEmail = useEmailStore((state) => state.selectEmail);
   const settingsOpen = useEmailStore((state) => state.settingsOpen);
   const setSettingsOpen = useEmailStore((state) => state.setSettingsOpen);
-  const formattedTimes = useEmailStore((state) => state.formattedTimes);
   const total = useEmailStore((state) => state.total);
 
-  const deleteEmailMutation = useDeleteEmail(token);
-  const batchDeleteMutation = useBatchDeleteEmails(token);
+  const deleteEmailMutation = useDeleteEmail();
+  const batchDeleteMutation = useBatchDeleteEmails();
 
-  useTimeWorker(emails);
+  // 同步 store 与查询数据
+  useEffect(() => {
+    if (data) {
+      const allEmails = data.pages.flatMap((page) => page.emails);
+      const total = data.pages[data.pages.length - 1]?.total || 0;
+      const loadedCount = allEmails.length;
+      const hasMore = loadedCount < total;
+      useEmailStore.getState().setEmails(allEmails, total, hasMore);
+    }
+  }, [data]);
 
+  const loading = isLoading || isFetching;
   const selectedEmail = emails.find((e) => e.id === selectedEmailId) || null;
   const hasSelection = selectedEmails.size > 0;
   const isAllSelected = selectedEmails.size === emails.length && emails.length > 0;
@@ -120,6 +122,16 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
     }
   }, [isMobile, setSettingsOpen]);
 
+  const handleRefresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetching) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetching, fetchNextPage]);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex h-screen overflow-hidden">
@@ -130,7 +142,7 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
             totalCount={total}
             isAllSelected={isAllSelected}
             loading={loading}
-            onRefresh={onRefresh}
+            onRefresh={handleRefresh}
             onToggleSelectAll={handleToggleSelectAll}
             onBatchDelete={handleBatchDelete}
             onClearSelection={() => setSelectedEmails(new Set())}
@@ -141,12 +153,11 @@ export default function EmailList({ emails, loading, onRefresh, onLoadMore, hasM
             <EmailListContent
               emails={emails}
               loading={loading}
-              hasMore={hasMore}
-              onLoadMore={onLoadMore}
-              onRefresh={onRefresh}
+              hasMore={hasNextPage}
+              onLoadMore={handleLoadMore}
+              onRefresh={handleRefresh}
               selectedEmailId={selectedEmailId}
               selectedEmails={selectedEmails}
-              formattedTimes={formattedTimes}
               copiedId={copiedId}
               onCopy={handleCopy}
               onEmailClick={handleEmailClick}

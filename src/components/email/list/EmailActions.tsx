@@ -3,7 +3,7 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface EmailActionsProps {
   emailId: number;

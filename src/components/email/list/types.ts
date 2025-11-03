@@ -5,7 +5,6 @@ export interface EmailListRenderProps {
   emails: Email[];
   selectedEmailId: number | null;
   selectedEmails: Set<number>;
-  formattedTimes: Record<number, string>;
   copiedId: string | null;
   onCopy: (id: string) => void;
   onEmailClick: (email: Email) => void;

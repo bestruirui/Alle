@@ -3,7 +3,7 @@
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { EmailDetail } from "@/components/email/EmailDetail";
 import type { Email } from "@/types";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface MobileEmailDrawerProps {
   open: boolean;
@@ -33,7 +33,7 @@ export function MobileEmailDrawer({ open, email, onClose, onOpenChange }: Mobile
           </DrawerDescription>
         </DrawerHeader>
         <div className="h-[85vh] overflow-hidden">
-          <EmailDetail email={email} onClose={onClose} />
+          <EmailDetail email={email} />
         </div>
       </DrawerContent>
     </Drawer>

@@ -2,7 +2,7 @@
 
 import { Mail, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 interface EmailListEmptyProps {
   onRefresh: () => void;

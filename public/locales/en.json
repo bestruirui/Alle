@@ -47,5 +47,11 @@
   "settingsSaved": "Settings saved",
   "loadMore": "Load more",
   "noMoreEmails": "No more emails",
-  "offlineMode": "Offline Mode"
+  "account": "Account",
+  "accountDesc": "Manage your account settings",
+  "logout": "Logout",
+  "timeJustNow": "Just now",
+  "timeMinutesAgo": "{{minutes}}m ago",
+  "timeHoursAgo": "{{hours}}h ago",
+  "timeDaysAgo": "{{days}}d ago"
 }
