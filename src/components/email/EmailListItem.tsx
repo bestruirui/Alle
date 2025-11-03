@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useMemo, type MouseEvent } from "react";
 import { useDevice } from "@/provider/Device";
 import { getProviderLogo } from "@/lib/utils/logo";
+import { useFormatTime } from "@/lib/hooks/useFormatTime";
 import type { Email } from "@/types";
 import { EmailAvatar } from "@/components/email/list/EmailAvatar";
 import { EmailActions } from "@/components/email/list/EmailActions";
@@ -14,7 +15,6 @@ interface EmailListItemProps {
   index: number;
   isSelected: boolean;
   isEmailSelected: boolean;
-  formattedTime?: string;
   copiedId: string | null;
   onCopy: (id: string) => void;
   onClick: (email: Email) => void;
@@ -27,7 +27,6 @@ export function EmailListItem({
   index,
   isSelected,
   isEmailSelected,
-  formattedTime,
   copiedId,
   onCopy,
   onClick,
@@ -35,8 +34,11 @@ export function EmailListItem({
   onAvatarToggle,
 }: EmailListItemProps) {
   const { isMobile } = useDevice();
+  const formatTime = useFormatTime();
 
   const logo = useMemo(() => getProviderLogo(email.fromAddress), [email.fromAddress]);
+  const formattedTime = useMemo(() => formatTime(email.sentAt), [formatTime, email.sentAt]);
+
   const isCopied = (id: string) => copiedId === id;
 
   return (
@@ -44,14 +46,13 @@ export function EmailListItem({
       key={email.id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.03, duration: 0.3 }}
+      transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.3 }}
     >
       <div
-        className={`px-4 py-3 cursor-pointer transition-all duration-200 group ${
-          isSelected && !isMobile
-            ? "bg-primary/10 border-l-4 border-l-primary"
-            : "hover:bg-accent border-l-4 border-l-transparent"
-        }`}
+        className={`cursor-pointer border-l-4 px-4 py-3 transition-all duration-200 group ${isSelected && !isMobile
+            ? "border-l-primary bg-primary/10"
+            : "border-l-transparent hover:bg-accent"
+          }`}
         onClick={() => onClick(email)}
       >
         <div className="flex items-start gap-3">
@@ -64,15 +65,15 @@ export function EmailListItem({
             />
           </div>
 
-          <div className="flex-1 min-w-0 w-0 flex flex-col justify-center">
-            <div className="flex flex-col mb-3">
+          <div className="flex w-0 min-w-0 flex-1 flex-col justify-center">
+            <div className="mb-3 flex flex-col">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-foreground truncate flex-1">
+                <h3 className="flex-1 truncate text-sm font-semibold text-foreground">
                   {email.fromName}
                 </h3>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground flex-shrink-0">
-                    {formattedTime || ""}
+                  <span className="flex-shrink-0 text-xs text-muted-foreground">
+                    {formattedTime}
                   </span>
                   <EmailActions
                     emailId={email.id}
@@ -83,7 +84,7 @@ export function EmailListItem({
                 </div>
               </div>
 
-              <div className="text-xs text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+              <div className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground">
                 {email.subject}
               </div>
             </div>

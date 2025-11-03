@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Mail, Clock, X } from "lucide-react";
+import { Mail, Clock } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmailContent } from "@/components/email/EmailContent";
 import { getProviderLogo } from "@/lib/utils/logo";
