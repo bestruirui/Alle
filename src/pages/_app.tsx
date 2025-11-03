@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/provider/Theme'
 import { DeviceProvider } from '@/provider/Device'
 import { QueryProvider } from '@/provider/Query'
 import { I18nProvider } from '@/provider/I18n'
+import { MemphisBackground } from '@/components/common/MemphisBackground'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -12,8 +13,10 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <DeviceProvider>
           <I18nProvider>
+            <MemphisBackground />
             <Head>
-              <title>Alle</title>
+              <title>Alle - Memphis Design</title>
+              <meta name="description" content="Email verification codes with Memphis art style" />
             </Head>
             <Component {...pageProps} />
           </I18nProvider>

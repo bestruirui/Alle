@@ -31,7 +31,7 @@ export function EmailActions({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-xl"
+            className="h-8 w-8 rounded-lg border-[2px] border-transparent hover:border-destructive hover:bg-destructive/10 transition-all duration-300"
             onClick={(event) => event.stopPropagation()}
           >
             <Trash2 className="h-3.5 w-3.5" />

@@ -28,7 +28,10 @@ export function CopyButton({ text, isCopied, onCopy, className }: CopyButtonProp
       variant="ghost"
       size="icon"
       onClick={handleCopy}
-      className={cn("h-8 w-8 rounded-xl transition-all duration-200", className)}
+      className={cn(
+        "h-8 w-8 rounded-lg border-[2px] border-transparent hover:border-[var(--memphis-purple)] hover:bg-[var(--memphis-purple)]/10 transition-all duration-300 shadow-[2px_2px_0_rgba(0,0,0,0.08)]",
+        className,
+      )}
     >
       <AnimatePresence mode="wait">
         {isCopied ? (
@@ -37,9 +40,9 @@ export function CopyButton({ text, isCopied, onCopy, className }: CopyButtonProp
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0, rotate: 180 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3, ease: [0.68, -0.55, 0.265, 1.55] }}
           >
-            <Check className="h-3.5 w-3.5 text-chart-2" />
+            <Check className="h-4 w-4 text-[var(--memphis-cyan)]" />
           </motion.div>
         ) : (
           <motion.div
@@ -47,9 +50,9 @@ export function CopyButton({ text, isCopied, onCopy, className }: CopyButtonProp
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25 }}
           >
-            <Copy className="h-3.5 w-3.5" />
+            <Copy className="h-4 w-4" />
           </motion.div>
         )}
       </AnimatePresence>

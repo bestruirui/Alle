@@ -4,38 +4,53 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --radius: 0.625rem;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Memphis Art Style - Vivid Four-Color System */
+  --memphis-pink: oklch(0.75 0.18 350);
+  --memphis-cyan: oklch(0.72 0.11 205);
+  --memphis-yellow: oklch(0.88 0.16 95);
+  --memphis-purple: oklch(0.6 0.21 300);
+
+  --background: oklch(0.985 0.03 105);
+  --foreground: oklch(0.22 0.06 280);
+  --radius: 0.75rem;
+
+  --card: oklch(1 0.01 95);
+  --card-foreground: oklch(0.22 0.06 280);
+
+  --popover: oklch(1 0.01 95);
+  --popover-foreground: oklch(0.22 0.06 280);
+
+  --primary: var(--memphis-pink);
+  --primary-foreground: oklch(0.98 0.01 95);
+
+  --secondary: var(--memphis-cyan);
+  --secondary-foreground: oklch(0.98 0.01 95);
+
+  --muted: oklch(0.95 0.03 100);
+  --muted-foreground: oklch(0.45 0.04 270);
+
+  --accent: var(--memphis-yellow);
+  --accent-foreground: oklch(0.2 0.05 280);
+
+  --destructive: oklch(0.55 0.25 25);
+  --border: oklch(0.82 0.02 270);
+  --input: oklch(0.92 0.02 95);
+  --ring: var(--memphis-purple);
+
+  --chart-1: var(--memphis-pink);
+  --chart-2: var(--memphis-cyan);
+  --chart-3: var(--memphis-yellow);
+  --chart-4: var(--memphis-purple);
+  --chart-5: oklch(0.7 0.15 140);
+
+  --sidebar: oklch(0.98 0.03 105);
+  --sidebar-foreground: oklch(0.22 0.06 280);
+  --sidebar-primary: var(--memphis-pink);
+  --sidebar-primary-foreground: oklch(0.98 0.01 95);
+  --sidebar-accent: var(--memphis-cyan);
+  --sidebar-accent-foreground: oklch(0.98 0.01 95);
+  --sidebar-border: oklch(0.8 0.03 280);
+  --sidebar-ring: var(--memphis-purple);
 }
 
 @theme inline {
@@ -86,43 +101,89 @@
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), 'Futura', 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color 0.6s ease, color 0.4s ease;
+  background-image:
+    radial-gradient(circle at 8% 15%, color-mix(in srgb, var(--memphis-pink) 48%, transparent) 0, transparent 55%),
+    radial-gradient(circle at 80% 5%, color-mix(in srgb, var(--memphis-cyan) 45%, transparent) 0, transparent 55%),
+    radial-gradient(circle at 15% 75%, color-mix(in srgb, var(--memphis-yellow) 52%, transparent) 0, transparent 60%),
+    radial-gradient(circle at 90% 85%, color-mix(in srgb, var(--memphis-purple) 48%, transparent) 0, transparent 55%),
+    linear-gradient(135deg, color-mix(in srgb, var(--background) 85%, white 15%), color-mix(in srgb, var(--background) 65%, black 5%));
 }
 
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  opacity: 0.95;
+}
+
+body::before {
+  background-image:
+    linear-gradient(135deg, transparent 45%, color-mix(in srgb, var(--memphis-purple) 45%, transparent) 45%, transparent 55%),
+    radial-gradient(circle, color-mix(in srgb, var(--memphis-yellow) 30%, transparent) 0, transparent 60%),
+    repeating-linear-gradient(45deg, transparent 0 18px, color-mix(in srgb, var(--memphis-cyan) 8%, transparent) 18px 36px);
+  mix-blend-mode: screen;
+  animation: memphisShift 18s ease-in-out infinite;
+}
+
+body::after {
+  background-image: radial-gradient(circle at center, color-mix(in srgb, var(--memphis-pink) 18%, transparent) 0, transparent 65%);
+  opacity: 0.4;
+  z-index: -3;
+}
+
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Memphis Art Style - Dark Mode */
+  --background: oklch(0.18 0.03 280);
+  --foreground: oklch(0.95 0.01 95);
+
+  --card: oklch(0.23 0.04 285);
+  --card-foreground: oklch(0.95 0.01 95);
+
+  --popover: oklch(0.23 0.04 285);
+  --popover-foreground: oklch(0.95 0.01 95);
+
+  --primary: var(--memphis-pink);
+  --primary-foreground: oklch(0.98 0.01 95);
+
+  --secondary: var(--memphis-cyan);
+  --secondary-foreground: oklch(0.98 0.01 95);
+
+  --muted: oklch(0.28 0.04 285);
+  --muted-foreground: oklch(0.65 0.03 270);
+
+  --accent: var(--memphis-yellow);
+  --accent-foreground: oklch(0.2 0.05 280);
+
+  --destructive: oklch(0.65 0.25 22);
+  --border: oklch(0.35 0.05 285);
+  --input: oklch(0.32 0.05 285);
+  --ring: var(--memphis-purple);
+
+  --chart-1: var(--memphis-pink);
+  --chart-2: var(--memphis-cyan);
+  --chart-3: var(--memphis-yellow);
+  --chart-4: var(--memphis-purple);
+  --chart-5: oklch(0.7 0.15 140);
+
+  --sidebar: oklch(0.23 0.04 285);
+  --sidebar-foreground: oklch(0.95 0.01 95);
+  --sidebar-primary: var(--memphis-pink);
+  --sidebar-primary-foreground: oklch(0.98 0.01 95);
+  --sidebar-accent: var(--memphis-cyan);
+  --sidebar-accent-foreground: oklch(0.98 0.01 95);
+  --sidebar-border: oklch(0.35 0.05 285);
+  --sidebar-ring: var(--memphis-purple);
 }
 
 @layer base {
@@ -131,8 +192,160 @@ body {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground antialiased;
+    background-color: transparent;
   }
+}
+
+/* Memphis Art Style - Geometric Patterns & Animations */
+@keyframes memphisShift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.92; }
+  25% { transform: translate(3%, 1%) rotate(1deg); opacity: 0.87; }
+  50% { transform: translate(0, 2%) rotate(-1deg); opacity: 0.95; }
+  75% { transform: translate(-2%, 1%) rotate(0.8deg); opacity: 0.9; }
+}
+
+@keyframes memphisPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.18); opacity: 0.7; }
+}
+
+@keyframes memphisFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-8px) rotate(5deg); }
+  66% { transform: translateY(8px) rotate(-5deg); }
+}
+
+@keyframes memphisRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes memphisZigzag {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(4px); }
+  50% { transform: translateX(-4px); }
+  75% { transform: translateX(2px); }
+}
+
+.memphis-card {
+  position: relative;
+  border: 4px solid var(--border);
+  box-shadow:
+    6px 6px 0 var(--memphis-pink),
+    12px 12px 0 var(--memphis-cyan),
+    -4px -4px 0 var(--memphis-yellow);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.memphis-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow:
+    8px 8px 0 var(--memphis-pink),
+    16px 16px 0 var(--memphis-cyan),
+    -6px -6px 0 var(--memphis-yellow);
+}
+
+.memphis-btn {
+  position: relative;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border: 3px solid var(--border);
+  box-shadow:
+    4px 4px 0 var(--memphis-purple),
+    -2px -2px 0 var(--memphis-yellow);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.memphis-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow:
+    6px 6px 0 var(--memphis-purple),
+    -3px -3px 0 var(--memphis-yellow);
+}
+
+.memphis-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow:
+    2px 2px 0 var(--memphis-purple),
+    -1px -1px 0 var(--memphis-yellow);
+}
+
+.memphis-pattern-dots {
+  background-image: radial-gradient(circle, var(--border) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.5;
+}
+
+.memphis-pattern-grid {
+  background-image:
+    linear-gradient(var(--border) 2px, transparent 2px),
+    linear-gradient(90deg, var(--border) 2px, transparent 2px);
+  background-size: 40px 40px;
+  opacity: 0.25;
+}
+
+.memphis-pattern-zigzag {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 10px,
+    var(--border) 10px 12px
+  );
+  opacity: 0.3;
+}
+
+.memphis-triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.memphis-circle {
+  border-radius: 50%;
+}
+
+.memphis-squiggle {
+  position: relative;
+  animation: memphisZigzag 2s ease-in-out infinite;
+}
+
+/* Custom geometric elements */
+.memphis-decoration-1 {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--memphis-pink), var(--memphis-purple));
+  opacity: 0.8;
+  animation: memphisFloat 6s ease-in-out infinite;
+}
+
+.memphis-decoration-2 {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 85px solid var(--memphis-cyan);
+  opacity: 0.7;
+  animation: memphisRotate 20s linear infinite;
+}
+
+.memphis-decoration-3 {
+  position: absolute;
+  width: 100px;
+  height: 25px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--memphis-yellow) 0,
+    var(--memphis-yellow) 15px,
+    transparent 15px,
+    transparent 30px
+  );
+  opacity: 0.65;
+  animation: memphisFloat 8s ease-in-out infinite reverse;
 }
 
 /* React Virtualized样式内联 - 去除外部依赖 */

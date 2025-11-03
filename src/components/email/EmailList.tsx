@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useTransition, useEffect, type MouseEvent } from "react";
+import { motion } from "framer-motion";
 import { useDevice } from "@/provider/Device";
 import { useEmailStore } from "@/lib/store/email";
 import { useDeleteEmail, useBatchDeleteEmails, useEmailListInfinite } from "@/lib/hooks/useEmailApi";
@@ -21,7 +22,6 @@ export default function EmailList() {
   const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
   const [, startTransition] = useTransition();
 
-  // 数据获取逻辑
   const { data, isLoading, isFetching, refetch, fetchNextPage, hasNextPage } = useEmailListInfinite();
   const emails = useEmailStore((state) => state.emails);
   const selectedEmailId = useEmailStore((state) => state.selectedEmailId);
@@ -32,7 +32,6 @@ export default function EmailList() {
   const deleteEmailMutation = useDeleteEmail();
   const batchDeleteMutation = useBatchDeleteEmails();
 
-  // 同步 store 与查询数据
   useEffect(() => {
     if (data) {
       const allEmails = data.pages.flatMap((page) => page.emails);
@@ -126,9 +125,46 @@ export default function EmailList() {
   }, [hasNextPage, isFetching, fetchNextPage]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex h-screen overflow-hidden">
-        <aside className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden">
+    <div className="relative min-h-screen px-4 py-6 md:px-10 lg:px-16 xl:px-24">
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        transition={{ duration: 0.8 }}
+      >
+        <motion.div
+          className="absolute top-12 left-[5%] w-36 h-36 rounded-full border-[8px] border-[var(--memphis-yellow)]"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+          style={{ opacity: 0.35 }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-[8%]"
+          animate={{ rotate: [0, 180, 360] }}
+          transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+          style={{ opacity: 0.4 }}
+        >
+          <div
+            className="w-0 h-0"
+            style={{
+              borderLeft: "60px solid transparent",
+              borderRight: "60px solid transparent",
+              borderBottom: "100px solid var(--memphis-purple)",
+            }}
+          />
+        </motion.div>
+        <motion.div
+          className="absolute top-[40%] left-[18%] w-28 h-[3px]"
+          style={{
+            background: "repeating-linear-gradient(90deg, var(--memphis-cyan) 0, var(--memphis-cyan) 12px, transparent 12px, transparent 24px)",
+          }}
+          animate={{ x: [0, 20, 0] }}
+          transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+        />
+      </motion.div>
+
+      <div className="relative z-10 flex h-[calc(100vh-5rem)] flex-col overflow-hidden rounded-[2rem] border-[4px] border-border bg-card/90 shadow-[12px_12px_0_var(--memphis-pink)] backdrop-blur-xl lg:flex-row lg:h-[calc(100vh-6rem)]">
+        <aside className="relative flex w-full flex-shrink-0 flex-col overflow-hidden border-b-[4px] border-border bg-card/90 lg:w-[430px] lg:border-b-0 lg:border-r-[4px]">
           <EmailListHeader
             selectedEmails={selectedEmails}
             loading={loading}
@@ -141,7 +177,7 @@ export default function EmailList() {
             onOpenSettings={handleOpenSettings}
           />
 
-          <div className="flex-1 overflow-hidden">
+          <div className="relative flex-1 overflow-hidden">
             <EmailListInteractionsProvider
               value={{
                 copiedId,
@@ -151,6 +187,9 @@ export default function EmailList() {
                 onAvatarToggle: handleAvatarToggle,
               }}
             >
+              <div className="absolute inset-0 pointer-events-none opacity-20">
+                <div className="memphis-pattern-dots absolute inset-0" />
+              </div>
               <EmailListContent
                 emails={emails}
                 loading={loading}
@@ -166,8 +205,21 @@ export default function EmailList() {
           </div>
         </aside>
 
-        <main className="hidden md:flex flex-1 bg-background overflow-hidden">
-          <div className="w-full max-w-5xl mx-auto">{settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail   email={selectedEmail} />}</div>
+        <main className="relative hidden flex-1 overflow-hidden bg-background/40 px-6 py-8 lg:flex">
+          <div className="pointer-events-none absolute inset-0 opacity-30">
+            <div className="memphis-pattern-grid absolute inset-0" />
+          </div>
+          <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col">
+            {settingsOpen ? (
+              <div className="memphis-card h-full overflow-hidden rounded-[1.75rem] border-[4px] border-border bg-card/95 p-1">
+                <Settings onClose={handleCloseSettings} />
+              </div>
+            ) : (
+              <div className="memphis-card h-full overflow-hidden rounded-[1.75rem] border-[4px] border-border bg-card/95 p-1">
+                <EmailDetail email={selectedEmail} />
+              </div>
+            )}
+          </div>
         </main>
       </div>
 
