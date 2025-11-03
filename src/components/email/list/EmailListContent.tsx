@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { EmailListSkeleton } from "@/components/email/list/EmailListSkeleton";
 import { EmailListEmpty } from "@/components/email/list/EmailListEmpty";
@@ -30,37 +30,34 @@ export function EmailListContent({
 }: EmailListContentProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const loadMoreTriggeredRef = useRef(false);
-  const emailIdsRef = useRef<string>("");
+  const prevEmailCountRef = useRef(emails.length);
+  const [resetKey, setResetKey] = useState(0);
 
   const itemCount = useMemo(() => (hasMore ? emails.length + 1 : emails.length), [emails.length, hasMore]);
+
+  // 检测删除操作（数组长度减少）时重置 virtualizer
+  useEffect(() => {
+    const currentCount = emails.length;
+    const prevCount = prevEmailCountRef.current;
+
+    if (currentCount < prevCount) {
+      // 数组长度减少，说明发生了删除，强制重置
+      setResetKey((prev) => prev + 1);
+    }
+
+    prevEmailCountRef.current = currentCount;
+  }, [emails.length]);
 
   const virtualizer = useVirtualizer({
     count: itemCount,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 120,
     overscan: 8,
-    measureElement: (element) => element?.getBoundingClientRect().height ?? 0,
     getItemKey: (index) => {
       const email = emails[index];
       return email ? `email-${email.id}` : `loader-${index}`;
     },
   });
-
-  // 检测 emails 数组的实际内容变化（特别是删除操作）
-  useEffect(() => {
-    const currentEmailIds = emails.map((e) => e.id).join(",");
-    const previousEmailIds = emailIdsRef.current;
-
-    // 如果邮件 ID 序列发生变化（删除、新增、重排），强制重新测量
-    if (currentEmailIds !== previousEmailIds && previousEmailIds !== "") {
-      // 等待 DOM 更新后再测量
-      requestAnimationFrame(() => {
-        virtualizer.measure();
-      });
-    }
-
-    emailIdsRef.current = currentEmailIds;
-  }, [emails, virtualizer]);
 
   const virtualItems = virtualizer.getVirtualItems();
 
@@ -92,6 +89,7 @@ export function EmailListContent({
 
   return (
     <div
+      key={resetKey}
       ref={parentRef}
       className="h-full overflow-y-auto"
       style={{
@@ -108,13 +106,6 @@ export function EmailListContent({
       >
         {virtualItems.map((virtualItem) => {
           const email = emails[virtualItem.index];
-          const style = {
-            position: "absolute" as const,
-            top: 0,
-            left: 0,
-            width: "100%",
-            transform: `translateY(${virtualItem.start}px)`,
-          };
 
           if (!email) {
             return (
@@ -122,7 +113,14 @@ export function EmailListContent({
                 key={virtualItem.key}
                 data-index={virtualItem.index}
                 ref={virtualizer.measureElement}
-                style={{ ...style, height: 96 }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: 96,
+                  transform: `translateY(${virtualItem.start}px)`,
+                }}
                 className="px-4 py-3"
               >
                 <div className="space-y-3 animate-pulse">
@@ -138,7 +136,13 @@ export function EmailListContent({
               key={virtualItem.key}
               data-index={virtualItem.index}
               ref={virtualizer.measureElement}
-              style={style}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
             >
               <EmailListItem
                 email={email}
