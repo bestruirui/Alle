@@ -5,13 +5,16 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { EmailListSkeleton } from "@/components/email/list/EmailListSkeleton";
 import { EmailListEmpty } from "@/components/email/list/EmailListEmpty";
 import { EmailListItem } from "@/components/email/EmailListItem";
-import type { EmailListRenderProps } from "@/components/email/list/types";
+import type { Email } from "@/types";
 
-interface EmailListContentProps extends EmailListRenderProps {
+interface EmailListContentProps {
+  emails: Email[];
   loading: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;
   onRefresh: () => void;
+  selectedEmailId: number | null;
+  selectedEmails: Set<number>;
 }
 
 export function EmailListContent({
@@ -22,11 +25,6 @@ export function EmailListContent({
   onRefresh,
   selectedEmailId,
   selectedEmails,
-  copiedId,
-  onCopy,
-  onEmailClick,
-  onEmailDelete,
-  onAvatarToggle,
 }: EmailListContentProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const loadMoreTriggeredRef = useRef(false);
@@ -147,11 +145,6 @@ export function EmailListContent({
                 index={virtualItem.index}
                 isSelected={selectedEmailId === email.id}
                 isEmailSelected={selectedEmails.has(email.id)}
-                copiedId={copiedId}
-                onCopy={onCopy}
-                onClick={onEmailClick}
-                onDelete={onEmailDelete}
-                onAvatarToggle={onAvatarToggle}
               />
             </div>
           );

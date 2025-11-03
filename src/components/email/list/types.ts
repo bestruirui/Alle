@@ -1,10 +1,7 @@
 import type { MouseEvent } from "react";
 import type { Email } from "@/types";
 
-export interface EmailListRenderProps {
-  emails: Email[];
-  selectedEmailId: number | null;
-  selectedEmails: Set<number>;
+export interface EmailListInteractionsContextValue {
   copiedId: string | null;
   onCopy: (id: string) => void;
   onEmailClick: (email: Email) => void;

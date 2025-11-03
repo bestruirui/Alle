@@ -4,14 +4,14 @@ import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/common/CopyButton";
 import type { Email } from "@/types";
+import { useEmailListInteractions } from "@/components/email/list/EmailListInteractionsContext";
 
 interface VerificationDisplayProps {
   email: Email;
-  copiedId: string | null;
-  onCopy: (id: string) => void;
 }
 
-export function VerificationDisplay({ email, copiedId, onCopy }: VerificationDisplayProps) {
+export function VerificationDisplay({ email }: VerificationDisplayProps) {
+  const { copiedId, onCopy } = useEmailListInteractions();
   if (email.verificationType === "link" && email.verificationLink) {
     const copyId = `list-link-${email.id}`;
     const isCopied = copiedId === copyId;

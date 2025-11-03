@@ -7,6 +7,7 @@ import { useDeleteEmail, useBatchDeleteEmails, useEmailListInfinite } from "@/li
 import type { Email } from "@/types";
 import { EmailListHeader } from "@/components/email/list/EmailListHeader";
 import { EmailListContent } from "@/components/email/list/EmailListContent";
+import { EmailListInteractionsProvider } from "@/components/email/list/EmailListInteractionsContext";
 import { MobileEmailDrawer } from "@/components/email/list/MobileEmailDrawer";
 import { MobileSettingsDrawer } from "@/components/email/list/MobileSettingsDrawer";
 import { EmailDetail } from "@/components/email/EmailDetail";
@@ -70,6 +71,11 @@ export default function EmailList() {
       return next;
     });
   }, []);
+
+  const handleEmailDelete = useCallback(
+    (emailId: number) => deleteEmailMutation.mutateAsync(emailId),
+    [deleteEmailMutation],
+  );
 
   const handleCopy = useCallback((id: string) => {
     setCopiedId(id);
@@ -136,22 +142,27 @@ export default function EmailList() {
           />
 
           <div className="flex-1 overflow-hidden">
-            <EmailListContent
-              emails={emails}
-              loading={loading}
-              hasMore={hasNextPage}
-              onLoadMore={handleLoadMore}
-              onRefresh={() => {
-                void refetch();
+            <EmailListInteractionsProvider
+              value={{
+                copiedId,
+                onCopy: handleCopy,
+                onEmailClick: handleEmailClick,
+                onEmailDelete: handleEmailDelete,
+                onAvatarToggle: handleAvatarToggle,
               }}
-              selectedEmailId={selectedEmailId}
-              selectedEmails={selectedEmails}
-              copiedId={copiedId}
-              onCopy={handleCopy}
-              onEmailClick={handleEmailClick}
-              onEmailDelete={deleteEmailMutation.mutateAsync}
-              onAvatarToggle={handleAvatarToggle}
-            />
+            >
+              <EmailListContent
+                emails={emails}
+                loading={loading}
+                hasMore={hasNextPage}
+                onLoadMore={handleLoadMore}
+                onRefresh={() => {
+                  void refetch();
+                }}
+                selectedEmailId={selectedEmailId}
+                selectedEmails={selectedEmails}
+              />
+            </EmailListInteractionsProvider>
           </div>
         </aside>
 
