@@ -50,6 +50,8 @@
   "account": "Account",
   "accountDesc": "Manage your account settings",
   "logout": "Logout",
+  "logoutTitle": "Logout",
+  "logoutConfirm": "Are you sure you want to logout?",
   "timeJustNow": "Just now",
   "timeMinutesAgo": "{{minutes}}m ago",
   "timeHoursAgo": "{{hours}}h ago",

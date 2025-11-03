@@ -50,6 +50,8 @@
   "account": "账户",
   "accountDesc": "管理您的账户设置",
   "logout": "退出登录",
+  "logoutTitle": "退出登录",
+  "logoutConfirm": "确认退出登录？",
   "timeJustNow": "刚刚",
   "timeMinutesAgo": "{{minutes}}分钟前",
   "timeHoursAgo": "{{hours}}小时前",

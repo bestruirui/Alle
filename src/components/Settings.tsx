@@ -9,6 +9,7 @@ import { useAuthStore } from "@/lib/store/auth";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 import { X, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
+import { DeleteDialog } from "@/components/common/DeleteDialog";
 
 interface SettingsProps {
   onClose?: () => void;
@@ -27,24 +28,9 @@ export function Settings({ onClose }: SettingsProps) {
     setTheme: setStoredTheme,
   } = useSettingsStore();
 
-
-  const handleLanguageChange = (newLanguage: 'zh' | 'en') => {
-    setLanguage(newLanguage);
-  };
-
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme);
     setStoredTheme(newTheme);
-  };
-
-  const handleIntervalChange = (interval: number) => {
-    setAutoRefreshInterval(interval);
-  };
-
-  const handleLogout = () => {
-    if (confirm(t('logoutConfirm') || '确认退出登录？')) {
-      logout();
-    }
   };
 
   const intervalOptions = [
@@ -120,14 +106,14 @@ export function Settings({ onClose }: SettingsProps) {
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     variant={storedLanguage === 'zh' ? 'default' : 'outline'}
-                    onClick={() => handleLanguageChange('zh')}
+                    onClick={() => setLanguage('zh')}
                     className="rounded-xl"
                   >
                     中文
                   </Button>
                   <Button
                     variant={storedLanguage === 'en' ? 'default' : 'outline'}
-                    onClick={() => handleLanguageChange('en')}
+                    onClick={() => setLanguage('en')}
                     className="rounded-xl"
                   >
                     English
@@ -153,7 +139,7 @@ export function Settings({ onClose }: SettingsProps) {
                     <Button
                       key={option.value}
                       variant={autoRefreshInterval === option.value ? 'default' : 'outline'}
-                      onClick={() => handleIntervalChange(option.value)}
+                      onClick={() => setAutoRefreshInterval(option.value)}
                       className="rounded-xl"
                     >
                       {option.label}
@@ -174,14 +160,22 @@ export function Settings({ onClose }: SettingsProps) {
 
               {/* Logout Button */}
               <div className="space-y-3">
-                <Button
-                  variant="destructive"
-                  onClick={handleLogout}
-                  className="w-full rounded-xl"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  {t('logout')}
-                </Button>
+                <DeleteDialog
+                  trigger={
+                    <Button
+                      variant="destructive"
+                      className="w-full rounded-xl"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      {t('logout')}
+                    </Button>
+                  }
+                  title={t('logoutTitle')}
+                  description={t('logoutConfirm')}
+                  onConfirm={logout}
+                  cancelText={t('cancel')}
+                  confirmText={t('confirm')}
+                />
               </div>
             </div>
           </div>
