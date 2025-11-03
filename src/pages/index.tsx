@@ -13,16 +13,12 @@ export default function Home() {
     setIsLoading(false);
   }, [initAuth]);
 
-  const handleLoginSuccess = (newToken: string) => {
-    setToken(newToken);
-  };
-
   if (isLoading) {
     return <LoadingPage />;
   }
 
   if (!isAuthenticated || !token) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+    return <LoginPage onLoginSuccess={setToken} />;
   }
 
   return <EmailList />;

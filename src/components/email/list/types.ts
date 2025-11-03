@@ -8,6 +8,6 @@ export interface EmailListRenderProps {
   copiedId: string | null;
   onCopy: (id: string) => void;
   onEmailClick: (email: Email) => void;
-  onEmailDelete?: (emailId: number) => void;
+  onEmailDelete?: (emailId: number) => void | Promise<unknown>;
   onAvatarToggle: (email: Email, event: MouseEvent) => void;
 }

@@ -5,11 +5,10 @@ import { RefreshCw, Settings as SettingsIcon, CheckSquare, Square, Trash2 } from
 import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
 import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useEmailStore } from "@/lib/store/email";
+
 interface EmailListHeaderProps {
-  hasSelection: boolean;
-  selectionCount: number;
-  totalCount: number;
-  isAllSelected: boolean;
+  selectedEmails: Set<number>;
   loading: boolean;
   onRefresh: () => void;
   onToggleSelectAll: () => void;
@@ -19,10 +18,7 @@ interface EmailListHeaderProps {
 }
 
 export function EmailListHeader({
-  hasSelection,
-  selectionCount,
-  totalCount,
-  isAllSelected,
+  selectedEmails,
   loading,
   onRefresh,
   onToggleSelectAll,
@@ -31,6 +27,12 @@ export function EmailListHeader({
   onOpenSettings,
 }: EmailListHeaderProps) {
   const { t } = useTranslation();
+  const totalCount = useEmailStore((state) => state.total);
+  const emailCount = useEmailStore((state) => state.emails.length);
+
+  const selectionCount = selectedEmails.size;
+  const hasSelection = selectionCount > 0;
+  const isAllSelected = hasSelection && selectionCount === emailCount;
 
   return (
     <header className="flex items-center justify-between px-6 py-5 border-b border-border bg-card/95 backdrop-blur-sm">
