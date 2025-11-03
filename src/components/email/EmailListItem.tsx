@@ -34,9 +34,11 @@ export function EmailListItem({
   return (
     <motion.div
       key={email.id}
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.3 }}
+      whileHover={{ y: -2 }}
+      transition={{ delay: Math.min(index * 0.03, 0.4), duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
         className={`cursor-pointer border-l-4 px-4 py-3 transition-all duration-200 group ${isSelected && !isMobile

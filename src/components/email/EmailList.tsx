@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useTransition, useEffect, type MouseEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useDevice } from "@/provider/Device";
 import { useEmailStore } from "@/lib/store/email";
 import { useDeleteEmail, useBatchDeleteEmails, useEmailListInfinite } from "@/lib/hooks/useEmailApi";
@@ -128,7 +129,12 @@ export default function EmailList() {
   return (
     <div className="min-h-screen bg-background">
       <div className="flex h-screen overflow-hidden">
-        <aside className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden">
+        <motion.aside
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden"
+        >
           <EmailListHeader
             selectedEmails={selectedEmails}
             loading={loading}
@@ -164,11 +170,40 @@ export default function EmailList() {
               />
             </EmailListInteractionsProvider>
           </div>
-        </aside>
+        </motion.aside>
 
-        <main className="hidden md:flex flex-1 bg-background overflow-hidden">
-          <div className="w-full max-w-5xl mx-auto">{settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail   email={selectedEmail} />}</div>
-        </main>
+        <motion.main
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden md:flex flex-1 bg-background overflow-hidden"
+        >
+          <div className="w-full max-w-5xl mx-auto">
+            <AnimatePresence mode="wait">
+              {settingsOpen ? (
+                <motion.div
+                  key="settings"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Settings onClose={handleCloseSettings} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="email-detail"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <EmailDetail email={selectedEmail} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.main>
       </div>
 
       <MobileEmailDrawer open={isMobileDrawerOpen} email={selectedEmail} onClose={() => setIsMobileDrawerOpen(false)} />

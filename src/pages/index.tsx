@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import LoginPage from "@/components/LoginPage";
 import LoadingPage from "@/components/LoadingPage";
 import EmailList from "@/components/email/EmailList";
@@ -14,12 +15,42 @@ export default function Home() {
   }, [initAuth]);
 
   if (isLoading) {
-    return <LoadingPage />;
+    return (
+      <motion.div
+        key="loading"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <LoadingPage />
+      </motion.div>
+    );
   }
 
   if (!isAuthenticated || !token) {
-    return <LoginPage onLoginSuccess={setToken} />;
+    return (
+      <motion.div
+        key="login"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <LoginPage onLoginSuccess={setToken} />
+      </motion.div>
+    );
   }
 
-  return <EmailList />;
+  return (
+    <motion.div
+      key="email-list"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <EmailList />
+    </motion.div>
+  );
 }

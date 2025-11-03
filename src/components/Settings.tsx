@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,20 +39,36 @@ export function Settings({ onClose }: { onClose?: () => void }) {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <motion.div 
+      initial={{ opacity: 0, x: 16 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 16 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col h-full bg-background"
+    >
       {/* Header */}
       <div className="flex-shrink-0 border-b border-border bg-card">
         <div className="p-6">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <motion.div 
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center gap-3"
+            >
+              <motion.div 
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+                className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center"
+              >
                 <SettingsIcon className="h-5 w-5 text-primary" />
-              </div>
+              </motion.div>
               <div>
                 <h2 className="text-xl font-bold text-foreground">{t('settingsTitle')}</h2>
                 <p className="text-sm text-muted-foreground mt-0.5">{t('settingsDesc')}</p>
               </div>
-            </div>
+            </motion.div>
             {onClose && (
               <Button
                 variant="ghost"
@@ -59,7 +76,12 @@ export function Settings({ onClose }: { onClose?: () => void }) {
                 onClick={onClose}
                 className="h-10 w-10 rounded-xl md:hidden"
               >
-                <X className="h-5 w-5" />
+                <motion.div
+                  whileHover={{ rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <X className="h-5 w-5" />
+                </motion.div>
               </Button>
             )}
           </div>
@@ -71,7 +93,12 @@ export function Settings({ onClose }: { onClose?: () => void }) {
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
             {/* Appearance Section */}
-            <div className="space-y-4">
+            <motion.section 
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-4"
+            >
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-1">{t('appearance')}</h3>
                 <p className="text-sm text-muted-foreground">{t('appearanceDesc')}</p>
@@ -83,15 +110,21 @@ export function Settings({ onClose }: { onClose?: () => void }) {
               <div className="space-y-3">
                 <Label className="text-sm font-medium">{t('theme')}</Label>
                 <div className="grid grid-cols-3 gap-3">
-                  {['light', 'dark', 'system'].map((themeOption) => (
-                    <Button
+                  {['light', 'dark', 'system'].map((themeOption, index) => (
+                    <motion.div
                       key={themeOption}
-                      variant={storedTheme === themeOption ? 'default' : 'outline'}
-                      onClick={() => handleThemeChange(themeOption as 'light' | 'dark' | 'system')}
-                      className="rounded-xl"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 * index, duration: 0.2 }}
                     >
-                      {t(themeOption)}
-                    </Button>
+                      <Button
+                        variant={storedTheme === themeOption ? 'default' : 'outline'}
+                        onClick={() => handleThemeChange(themeOption as 'light' | 'dark' | 'system')}
+                        className="rounded-xl"
+                      >
+                        {t(themeOption)}
+                      </Button>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -100,26 +133,36 @@ export function Settings({ onClose }: { onClose?: () => void }) {
               <div className="space-y-3">
                 <Label className="text-sm font-medium">{t('language')}</Label>
                 <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant={storedLanguage === 'zh' ? 'default' : 'outline'}
-                    onClick={() => setLanguage('zh')}
-                    className="rounded-xl"
-                  >
-                    中文
-                  </Button>
-                  <Button
-                    variant={storedLanguage === 'en' ? 'default' : 'outline'}
-                    onClick={() => setLanguage('en')}
-                    className="rounded-xl"
-                  >
-                    English
-                  </Button>
+                  {[
+                    { label: '中文', value: 'zh' },
+                    { label: 'English', value: 'en' },
+                  ].map((option, index) => (
+                    <motion.div
+                      key={option.value}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 * index, duration: 0.2 }}
+                    >
+                      <Button
+                        variant={storedLanguage === option.value ? 'default' : 'outline'}
+                        onClick={() => setLanguage(option.value as 'zh' | 'en')}
+                        className="rounded-xl"
+                      >
+                        {option.label}
+                      </Button>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
-            </div>
+            </motion.section>
 
             {/* General Section */}
-            <div className="space-y-4">
+            <motion.section
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05, duration: 0.3 }}
+              className="space-y-4"
+            >
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-1">{t('general')}</h3>
                 <p className="text-sm text-muted-foreground">{t('generalDesc')}</p>
@@ -131,22 +174,33 @@ export function Settings({ onClose }: { onClose?: () => void }) {
               <div className="space-y-3">
                 <Label className="text-sm font-medium">{t('autoRefreshInterval')}</Label>
                 <div className="grid grid-cols-2 gap-3">
-                  {intervalOptions.map((option) => (
-                    <Button
+                  {intervalOptions.map((option, index) => (
+                    <motion.div
                       key={option.value}
-                      variant={autoRefreshInterval === option.value ? 'default' : 'outline'}
-                      onClick={() => setAutoRefreshInterval(option.value)}
-                      className="rounded-xl"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 * index, duration: 0.2 }}
                     >
-                      {option.label}
-                    </Button>
+                      <Button
+                        variant={autoRefreshInterval === option.value ? 'default' : 'outline'}
+                        onClick={() => setAutoRefreshInterval(option.value)}
+                        className="rounded-xl"
+                      >
+                        {option.label}
+                      </Button>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.section>
 
             {/* Account Section */}
-            <div className="space-y-4">
+            <motion.section
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="space-y-4"
+            >
               <div>
                 <h3 className="text-lg font-semibold text-foreground mb-1">{t('account')}</h3>
                 <p className="text-sm text-muted-foreground">{t('accountDesc')}</p>
@@ -155,7 +209,12 @@ export function Settings({ onClose }: { onClose?: () => void }) {
               <Separator />
 
               {/* Logout Button */}
-              <div className="space-y-3">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-3"
+              >
                 <DeleteDialog
                   trigger={
                     <Button
@@ -172,11 +231,11 @@ export function Settings({ onClose }: { onClose?: () => void }) {
                   cancelText={t('cancel')}
                   confirmText={t('confirm')}
                 />
-              </div>
-            </div>
+              </motion.div>
+            </motion.section>
           </div>
         </ScrollArea>
       </div>
-    </div>
+    </motion.div>
   );
 }
