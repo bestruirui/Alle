@@ -4,7 +4,7 @@ import { useI18nStore } from '../store/i18n';
 
 export const useTranslation = () => {
     const { language } = useSettingsStore();
-    const { loadTranslations, getCurrentTranslations, isLoading, currentLocale } = useI18nStore();
+    const { loadTranslations, getCurrentTranslations, isLoading } = useI18nStore();
 
     // 监听语言变化，自动加载对应翻译
     useEffect(() => {
@@ -25,7 +25,7 @@ export const useTranslation = () => {
 
             return text;
         },
-        [getCurrentTranslations, currentLocale] // 依赖 currentLocale 确保语言切换时重新计算
+        [getCurrentTranslations] // getCurrentTranslations 已经捕获了 currentLocale
     );
 
     return { t: translate, language, isLoading };

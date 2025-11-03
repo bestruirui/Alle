@@ -11,11 +11,7 @@ import { X, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
 
-interface SettingsProps {
-  onClose?: () => void;
-}
-
-export function Settings({ onClose }: SettingsProps) {
+export function Settings({ onClose }: { onClose?: () => void }) {
   const { t } = useTranslation();
   const { setTheme } = useTheme();
   const { logout } = useAuthStore();

@@ -1,25 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useMemo, type MouseEvent } from "react";
+import { useMemo } from "react";
 import { useDevice } from "@/provider/Device";
 import { getProviderLogo } from "@/lib/utils/logo";
 import { useFormatTime } from "@/lib/hooks/useFormatTime";
 import type { Email } from "@/types";
-import { EmailAvatar } from "@/components/email/list/EmailAvatar";
-import { EmailActions } from "@/components/email/list/EmailActions";
-import { VerificationDisplay } from "@/components/email/list/VerificationDisplay";
+import { EmailAvatar } from "@/components/email/EmailAvatar";
+import { EmailActions } from "@/components/email/EmailActions";
+import { VerificationDisplay } from "@/components/email/VerificationDisplay";
+import { useEmailListInteractions } from "@/components/email/EmailListInteractionsContext";
 
 interface EmailListItemProps {
   email: Email;
   index: number;
   isSelected: boolean;
   isEmailSelected: boolean;
-  copiedId: string | null;
-  onCopy: (id: string) => void;
-  onClick: (email: Email) => void;
-  onDelete?: (emailId: number) => void;
-  onAvatarToggle: (email: Email, event: MouseEvent) => void;
 }
 
 export function EmailListItem({
@@ -27,19 +23,13 @@ export function EmailListItem({
   index,
   isSelected,
   isEmailSelected,
-  copiedId,
-  onCopy,
-  onClick,
-  onDelete,
-  onAvatarToggle,
 }: EmailListItemProps) {
   const { isMobile } = useDevice();
   const formatTime = useFormatTime();
+  const { onEmailClick, onAvatarToggle } = useEmailListInteractions();
 
   const logo = useMemo(() => getProviderLogo(email.fromAddress), [email.fromAddress]);
   const formattedTime = useMemo(() => formatTime(email.sentAt), [formatTime, email.sentAt]);
-
-  const isCopied = (id: string) => copiedId === id;
 
   return (
     <motion.div
@@ -50,10 +40,10 @@ export function EmailListItem({
     >
       <div
         className={`cursor-pointer border-l-4 px-4 py-3 transition-all duration-200 group ${isSelected && !isMobile
-            ? "border-l-primary bg-primary/10"
-            : "border-l-transparent hover:bg-accent"
+          ? "border-l-primary bg-primary/10"
+          : "border-l-transparent hover:bg-accent"
           }`}
-        onClick={() => onClick(email)}
+        onClick={() => onEmailClick(email)}
       >
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
@@ -79,7 +69,6 @@ export function EmailListItem({
                     emailId={email.id}
                     emailName={email.fromName ?? ""}
                     isSelectionMode={isEmailSelected}
-                    onDelete={onDelete}
                   />
                 </div>
               </div>
@@ -89,7 +78,7 @@ export function EmailListItem({
               </div>
             </div>
 
-            <VerificationDisplay email={email} isCopied={isCopied} onCopy={onCopy} />
+            <VerificationDisplay email={email} />
           </div>
         </div>
       </div>

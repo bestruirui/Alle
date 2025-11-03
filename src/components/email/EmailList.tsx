@@ -5,10 +5,11 @@ import { useDevice } from "@/provider/Device";
 import { useEmailStore } from "@/lib/store/email";
 import { useDeleteEmail, useBatchDeleteEmails, useEmailListInfinite } from "@/lib/hooks/useEmailApi";
 import type { Email } from "@/types";
-import { EmailListHeader } from "@/components/email/list/EmailListHeader";
-import { EmailListContent } from "@/components/email/list/EmailListContent";
-import { MobileEmailDrawer } from "@/components/email/list/MobileEmailDrawer";
-import { MobileSettingsDrawer } from "@/components/email/list/MobileSettingsDrawer";
+import { EmailListHeader } from "@/components/email/EmailListHeader";
+import { EmailListContent } from "@/components/email/EmailListContent";
+import { EmailListInteractionsProvider } from "@/components/email/EmailListInteractionsContext";
+import { MobileEmailDrawer } from "@/components/email/MobileEmailDrawer";
+import { MobileSettingsDrawer } from "@/components/email/MobileSettingsDrawer";
 import { EmailDetail } from "@/components/email/EmailDetail";
 import { Settings } from "@/components/Settings";
 
@@ -27,7 +28,6 @@ export default function EmailList() {
   const selectEmail = useEmailStore((state) => state.selectEmail);
   const settingsOpen = useEmailStore((state) => state.settingsOpen);
   const setSettingsOpen = useEmailStore((state) => state.setSettingsOpen);
-  const total = useEmailStore((state) => state.total);
 
   const deleteEmailMutation = useDeleteEmail();
   const batchDeleteMutation = useBatchDeleteEmails();
@@ -45,8 +45,6 @@ export default function EmailList() {
 
   const loading = isLoading || isFetching;
   const selectedEmail = emails.find((e) => e.id === selectedEmailId) || null;
-  const hasSelection = selectedEmails.size > 0;
-  const isAllSelected = selectedEmails.size === emails.length && emails.length > 0;
 
   const handleEmailClick = useCallback(
     (email: Email) => {
@@ -74,25 +72,24 @@ export default function EmailList() {
     });
   }, []);
 
+  const handleEmailDelete = useCallback(
+    (emailId: number) => deleteEmailMutation.mutateAsync(emailId),
+    [deleteEmailMutation],
+  );
+
   const handleCopy = useCallback((id: string) => {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   }, []);
 
-  const handleDeleteEmail = useCallback(
-    async (emailId: number) => {
-      await deleteEmailMutation.mutateAsync(emailId);
-    },
-    [deleteEmailMutation],
-  );
-
   const handleToggleSelectAll = useCallback(() => {
-    if (isAllSelected) {
-      setSelectedEmails(new Set());
-    } else {
-      setSelectedEmails(new Set(emails.map((email) => email.id)));
-    }
-  }, [emails, isAllSelected]);
+    setSelectedEmails((prev) => {
+      if (prev.size === emails.length && emails.length > 0) {
+        return new Set();
+      }
+      return new Set(emails.map((email) => email.id));
+    });
+  }, [emails]);
 
   const handleBatchDelete = useCallback(async () => {
     if (selectedEmails.size > 0) {
@@ -122,10 +119,6 @@ export default function EmailList() {
     }
   }, [isMobile, setSettingsOpen]);
 
-  const handleRefresh = useCallback(() => {
-    refetch();
-  }, [refetch]);
-
   const handleLoadMore = useCallback(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
@@ -137,12 +130,11 @@ export default function EmailList() {
       <div className="flex h-screen overflow-hidden">
         <aside className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden">
           <EmailListHeader
-            hasSelection={hasSelection}
-            selectionCount={selectedEmails.size}
-            totalCount={total}
-            isAllSelected={isAllSelected}
+            selectedEmails={selectedEmails}
             loading={loading}
-            onRefresh={handleRefresh}
+            onRefresh={() => {
+              void refetch();
+            }}
             onToggleSelectAll={handleToggleSelectAll}
             onBatchDelete={handleBatchDelete}
             onClearSelection={() => setSelectedEmails(new Set())}
@@ -150,25 +142,32 @@ export default function EmailList() {
           />
 
           <div className="flex-1 overflow-hidden">
-            <EmailListContent
-              emails={emails}
-              loading={loading}
-              hasMore={hasNextPage}
-              onLoadMore={handleLoadMore}
-              onRefresh={handleRefresh}
-              selectedEmailId={selectedEmailId}
-              selectedEmails={selectedEmails}
-              copiedId={copiedId}
-              onCopy={handleCopy}
-              onEmailClick={handleEmailClick}
-              onEmailDelete={handleDeleteEmail}
-              onAvatarToggle={handleAvatarToggle}
-            />
+            <EmailListInteractionsProvider
+              value={{
+                copiedId,
+                onCopy: handleCopy,
+                onEmailClick: handleEmailClick,
+                onEmailDelete: handleEmailDelete,
+                onAvatarToggle: handleAvatarToggle,
+              }}
+            >
+              <EmailListContent
+                emails={emails}
+                loading={loading}
+                hasMore={hasNextPage}
+                onLoadMore={handleLoadMore}
+                onRefresh={() => {
+                  void refetch();
+                }}
+                selectedEmailId={selectedEmailId}
+                selectedEmails={selectedEmails}
+              />
+            </EmailListInteractionsProvider>
           </div>
         </aside>
 
         <main className="hidden md:flex flex-1 bg-background overflow-hidden">
-          <div className="w-full max-w-5xl mx-auto">{settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail email={selectedEmail} />}</div>
+          <div className="w-full max-w-5xl mx-auto">{settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail   email={selectedEmail} />}</div>
         </main>
       </div>
 

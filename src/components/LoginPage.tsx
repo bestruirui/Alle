@@ -6,17 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field";
 import type { ApiResponse, LoginResponseData } from "@/types";
 
-interface LoginPageProps {
-  onLoginSuccess: (token: string) => void;
-}
-
-const ANIMATION_CONFIG = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4 },
-};
-
-export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
+export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: (token: string) => void }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,7 +46,12 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
   return (
     <main className="min-h-screen bg-background flex items-center justify-center px-4">
-      <motion.div {...ANIMATION_CONFIG} className="w-full max-w-md">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
+      >
         <div className="bg-card rounded-lg shadow-lg p-8">
           <h1 className="text-2xl font-bold text-foreground mb-6 text-center">Alle</h1>
 

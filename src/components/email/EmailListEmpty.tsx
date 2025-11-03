@@ -4,11 +4,7 @@ import { Mail, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/hooks/useTranslation";
 
-interface EmailListEmptyProps {
-  onRefresh: () => void;
-}
-
-export function EmailListEmpty({ onRefresh }: EmailListEmptyProps) {
+export function EmailListEmpty({ onRefresh }: { onRefresh: () => void }) {
   const { t } = useTranslation();
 
   return (
@@ -18,7 +14,12 @@ export function EmailListEmpty({ onRefresh }: EmailListEmptyProps) {
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-2">{t("noEmails")}</h3>
       <p className="text-sm text-muted-foreground max-w-sm mb-6">{t("noEmailsDesc")}</p>
-      <Button onClick={onRefresh} className="rounded-xl">
+      <Button
+        onClick={() => {
+          void onRefresh();
+        }}
+        className="rounded-xl"
+      >
         <RefreshCw className="h-4 w-4 mr-2" />
         {t("refreshEmails")}
       </Button>

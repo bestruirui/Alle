@@ -67,6 +67,7 @@ export const useI18nStore = create<I18nState>((set, get) => ({
 
                 // 清理 Promise 缓存
                 set((state) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const { [locale]: _, ...rest } = state.loadingPromises;
                     return { loadingPromises: rest };
                 });
@@ -78,6 +79,7 @@ export const useI18nStore = create<I18nState>((set, get) => ({
 
                 // 清理失败的 Promise
                 set((state) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const { [locale]: _, ...rest } = state.loadingPromises;
                     return { loadingPromises: rest };
                 });

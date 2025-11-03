@@ -2,12 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-interface EmailContentProps {
-  bodyHtml: string | null;
-  bodyText: string | null;
-}
-
-export function EmailContent({ bodyHtml, bodyText }: EmailContentProps) {
+export function EmailContent({ bodyHtml, bodyText }: { bodyHtml: string | null; bodyText: string | null }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);

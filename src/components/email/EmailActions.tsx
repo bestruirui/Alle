@@ -4,23 +4,23 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/common/DeleteDialog";
 import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useEmailListInteractions } from "@/components/email/EmailListInteractionsContext";
 
 interface EmailActionsProps {
   emailId: number;
   emailName: string;
   isSelectionMode: boolean;
-  onDelete?: (emailId: number) => void;
 }
 
 export function EmailActions({
   emailId,
   emailName,
   isSelectionMode,
-  onDelete,
 }: EmailActionsProps) {
   const { t } = useTranslation();
+  const { onEmailDelete } = useEmailListInteractions();
 
-  if (isSelectionMode || !onDelete) {
+  if (isSelectionMode || !onEmailDelete) {
     return <div className="w-8 h-8" />;
   }
 
@@ -41,7 +41,7 @@ export function EmailActions({
         description={t("deleteDescWithName", { name: emailName })}
         onConfirm={(event) => {
           event?.stopPropagation();
-          onDelete(emailId);
+          onEmailDelete(emailId);
         }}
         cancelText={t("cancel")}
         confirmText={t("delete")}

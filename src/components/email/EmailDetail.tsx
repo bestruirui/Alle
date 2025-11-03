@@ -7,11 +7,7 @@ import { EmailContent } from "@/components/email/EmailContent";
 import { getProviderLogo } from "@/lib/utils/logo";
 import type { Email } from "@/types";
 
-interface EmailDetailProps {
-  email: Email | null;
-}
-
-export function EmailDetail({ email }: EmailDetailProps) {
+export function EmailDetail({ email }: { email: Email | null }) {
   if (!email) {
     return (
       <div className="flex items-center justify-center h-full w-full">

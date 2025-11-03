@@ -4,15 +4,14 @@ import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/common/CopyButton";
 import type { Email } from "@/types";
+import { useEmailListInteractions } from "@/components/email/EmailListInteractionsContext";
 
-interface VerificationDisplayProps {
-  email: Email;
-  isCopied: (id: string) => boolean;
-  onCopy: (id: string) => void;
-}
-
-export function VerificationDisplay({ email, isCopied, onCopy }: VerificationDisplayProps) {
+export function VerificationDisplay({ email }: { email: Email }) {
+  const { copiedId, onCopy } = useEmailListInteractions();
   if (email.verificationType === "link" && email.verificationLink) {
+    const copyId = `list-link-${email.id}`;
+    const isCopied = copiedId === copyId;
+
     return (
       <div className="flex items-center gap-2 p-2.5 rounded-lg bg-chart-3/5 border border-chart-3/20">
         <span className="text-xs text-muted-foreground flex-1 overflow-hidden text-ellipsis whitespace-nowrap min-w-0">
@@ -36,8 +35,8 @@ export function VerificationDisplay({ email, isCopied, onCopy }: VerificationDis
           </Button>
           <CopyButton
             text={email.verificationLink}
-            isCopied={isCopied(`list-link-${email.id}`)}
-            onCopy={() => onCopy(`list-link-${email.id}`)}
+            isCopied={isCopied}
+            onCopy={() => onCopy(copyId)}
           />
         </div>
       </div>
@@ -45,6 +44,9 @@ export function VerificationDisplay({ email, isCopied, onCopy }: VerificationDis
   }
 
   if (email.verificationType === "code" && email.verificationCode) {
+    const copyId = `list-code-${email.id}`;
+    const isCopied = copiedId === copyId;
+
     return (
       <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/20">
         <span className="text-lg font-bold font-mono text-primary tracking-wider flex-1">
@@ -52,8 +54,8 @@ export function VerificationDisplay({ email, isCopied, onCopy }: VerificationDis
         </span>
         <CopyButton
           text={email.verificationCode}
-          isCopied={isCopied(`list-code-${email.id}`)}
-          onCopy={() => onCopy(`list-code-${email.id}`)}
+          isCopied={isCopied}
+          onCopy={() => onCopy(copyId)}
         />
       </div>
     );
