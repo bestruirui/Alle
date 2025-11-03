@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 export function EmailListSkeleton() {
   return (
@@ -19,5 +19,5 @@ export function EmailListSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }

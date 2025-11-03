@@ -1,5 +1,5 @@
-import { motion } from "framer-motion"
-import { RefreshCw } from "lucide-react"
+import { motion } from "framer-motion";
+import { RefreshCw } from "lucide-react";
 
 export default function LoadingPage() {
   return (
@@ -40,5 +40,5 @@ export default function LoadingPage() {
         </div>
       </motion.div>
     </main>
-  )
+  );
 }

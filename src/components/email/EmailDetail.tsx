@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { Mail, Clock } from "lucide-react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { EmailContent } from "@/components/email/EmailContent"
-import { getProviderLogo } from "@/lib/utils/logo"
-import type { Email } from "@/types"
+import Image from "next/image";
+import { Mail, Clock } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { EmailContent } from "@/components/email/EmailContent";
+import { getProviderLogo } from "@/lib/utils/logo";
+import type { Email } from "@/types";
 
 export function EmailDetail({ email }: { email: Email | null }) {
   if (!email) {
@@ -21,15 +21,15 @@ export function EmailDetail({ email }: { email: Email | null }) {
           </p>
         </div>
       </div>
-    )
+    );
   }
 
-  const logo = getProviderLogo(email.fromAddress)
+  const logo = getProviderLogo(email.fromAddress);
 
   const formatFullTime = (sentAt: string | null): string => {
-    if (!sentAt) return ""
-    const date = new Date(sentAt)
-    if (Number.isNaN(date.getTime())) return ""
+    if (!sentAt) return "";
+    const date = new Date(sentAt);
+    if (Number.isNaN(date.getTime())) return "";
 
     return date.toLocaleString(undefined, {
       year: "numeric",
@@ -37,8 +37,8 @@ export function EmailDetail({ email }: { email: Email | null }) {
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -80,13 +80,10 @@ export function EmailDetail({ email }: { email: Email | null }) {
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-6 px-10 py-8">
-            <EmailContent
-              bodyHtml={email.bodyHtml}
-              bodyText={email.bodyText}
-            />
+            <EmailContent bodyHtml={email.bodyHtml} bodyText={email.bodyText} />
           </div>
         </ScrollArea>
       </div>
     </div>
-  )
+  );
 }

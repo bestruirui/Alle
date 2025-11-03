@@ -1,22 +1,22 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field"
-import type { ApiResponse, LoginResponseData } from "@/types"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldLabel, FieldError, FieldGroup } from "@/components/ui/field";
+import type { ApiResponse, LoginResponseData } from "@/types";
 
 export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: (token: string) => void }) {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [trustDevice, setTrustDevice] = useState(false)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [trustDevice, setTrustDevice] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setError("")
-    setLoading(true)
+    event.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -27,22 +27,22 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: (token: 
           password,
           expired: trustDevice ? "none" : undefined,
         }),
-      })
+      });
 
-      const data = (await response.json()) as ApiResponse<LoginResponseData>
+      const data = (await response.json()) as ApiResponse<LoginResponseData>;
 
       if (data.success && data.data) {
-        localStorage.setItem("auth_token", data.data.token)
-        onLoginSuccess(data.data.token)
+        localStorage.setItem("auth_token", data.data.token);
+        onLoginSuccess(data.data.token);
       } else {
-        setError(data.error || "登录失败")
+        setError(data.error || "登录失败");
       }
     } catch {
-      setError("网络错误,请稍后重试")
+      setError("网络错误,请稍后重试");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen memphis-pattern relative flex items-center justify-center overflow-hidden px-4 py-12">
@@ -129,7 +129,11 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: (token: 
               </Field>
             </FieldGroup>
 
-            {error && <FieldError className="rounded-xl border-2 border-destructive bg-destructive/10 px-3 py-2 text-center text-sm font-medium text-destructive">{error}</FieldError>}
+            {error && (
+              <FieldError className="rounded-xl border-2 border-destructive bg-destructive/10 px-3 py-2 text-center text-sm font-medium text-destructive">
+                {error}
+              </FieldError>
+            )}
 
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "登录中..." : "进入孟菲斯空间"}
@@ -138,5 +142,5 @@ export default function LoginPage({ onLoginSuccess }: { onLoginSuccess: (token: 
         </div>
       </motion.div>
     </main>
-  )
+  );
 }

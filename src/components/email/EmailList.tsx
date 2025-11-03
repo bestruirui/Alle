@@ -140,7 +140,7 @@ export default function EmailList() {
               selectedEmails={selectedEmails}
               loading={loading}
               onRefresh={() => {
-                void refetch()
+                void refetch();
               }}
               onToggleSelectAll={handleToggleSelectAll}
               onBatchDelete={handleBatchDelete}
@@ -164,7 +164,7 @@ export default function EmailList() {
                   hasMore={hasNextPage}
                   onLoadMore={handleLoadMore}
                   onRefresh={() => {
-                    void refetch()
+                    void refetch();
                   }}
                   selectedEmailId={selectedEmailId}
                   selectedEmails={selectedEmails}
@@ -187,5 +187,5 @@ export default function EmailList() {
 
       <MobileSettingsDrawer open={mobileSettingsOpen} onClose={handleCloseSettings} onOpenChange={setMobileSettingsOpen} />
     </div>
-  )
+  );
 }

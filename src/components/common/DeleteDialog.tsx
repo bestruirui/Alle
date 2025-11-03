@@ -45,7 +45,7 @@ export function DeleteDialog({
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{cancelText}</AlertDialogCancel>
+          <AlertDialogCancel onClick={(event) => event.stopPropagation()}>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             className="bg-destructive text-primary-foreground shadow-[0_12px_0_rgba(255,140,66,0.24)] hover:shadow-[0_16px_0_rgba(255,140,66,0.32)]"

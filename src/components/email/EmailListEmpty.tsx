@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Mail, RefreshCw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTranslation } from "@/lib/hooks/useTranslation"
+import { Mail, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/hooks/useTranslation";
 
 export function EmailListEmpty({ onRefresh }: { onRefresh: () => void }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="flex h-full flex-col items-center justify-center px-8 text-center">
@@ -20,7 +20,7 @@ export function EmailListEmpty({ onRefresh }: { onRefresh: () => void }) {
         </div>
         <Button
           onClick={() => {
-            void onRefresh()
+            void onRefresh();
           }}
           className="w-full sm:w-auto"
         >
@@ -29,5 +29,5 @@ export function EmailListEmpty({ onRefresh }: { onRefresh: () => void }) {
         </Button>
       </div>
     </div>
-  )
+  );
 }

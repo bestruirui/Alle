@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { RefreshCw, Settings as SettingsIcon, CheckSquare, Square, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DeleteDialog } from "@/components/common/DeleteDialog"
-import { useTranslation } from "@/lib/hooks/useTranslation"
-import { useEmailStore } from "@/lib/store/email"
+import { motion } from "framer-motion";
+import { RefreshCw, Settings as SettingsIcon, CheckSquare, Square, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DeleteDialog } from "@/components/common/DeleteDialog";
+import { useTranslation } from "@/lib/hooks/useTranslation";
+import { useEmailStore } from "@/lib/store/email";
 
 interface EmailListHeaderProps {
-  selectedEmails: Set<number>
-  loading: boolean
-  onRefresh: () => void
-  onToggleSelectAll: () => void
-  onBatchDelete: () => Promise<void> | void
-  onClearSelection: () => void
-  onOpenSettings: () => void
+  selectedEmails: Set<number>;
+  loading: boolean;
+  onRefresh: () => void;
+  onToggleSelectAll: () => void;
+  onBatchDelete: () => Promise<void> | void;
+  onClearSelection: () => void;
+  onOpenSettings: () => void;
 }
 
 export function EmailListHeader({
@@ -26,13 +26,13 @@ export function EmailListHeader({
   onClearSelection,
   onOpenSettings,
 }: EmailListHeaderProps) {
-  const { t } = useTranslation()
-  const totalCount = useEmailStore((state) => state.total)
-  const emailCount = useEmailStore((state) => state.emails.length)
+  const { t } = useTranslation();
+  const totalCount = useEmailStore((state) => state.total);
+  const emailCount = useEmailStore((state) => state.emails.length);
 
-  const selectionCount = selectedEmails.size
-  const hasSelection = selectionCount > 0
-  const isAllSelected = hasSelection && selectionCount === emailCount
+  const selectionCount = selectedEmails.size;
+  const hasSelection = selectionCount > 0;
+  const isAllSelected = hasSelection && selectionCount === emailCount;
 
   return (
     <header className="relative flex flex-col gap-5 border-b-2 border-border px-8 py-6">
@@ -78,8 +78,8 @@ export function EmailListHeader({
                 title={t("batchDeleteConfirm")}
                 description={t("batchDeleteDesc", { count: selectionCount })}
                 onConfirm={(event) => {
-                  event?.stopPropagation()
-                  onBatchDelete()
+                  event?.stopPropagation();
+                  onBatchDelete();
                 }}
                 cancelText={t("cancel")}
                 confirmText={t("delete")}
@@ -118,5 +118,5 @@ export function EmailListHeader({
         </div>
       </div>
     </header>
-  )
+  );
 }
