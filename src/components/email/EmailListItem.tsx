@@ -39,8 +39,6 @@ export function EmailListItem({
   const logo = useMemo(() => getProviderLogo(email.fromAddress), [email.fromAddress]);
   const formattedTime = useMemo(() => formatTime(email.sentAt), [formatTime, email.sentAt]);
 
-  const isCopied = (id: string) => copiedId === id;
-
   return (
     <motion.div
       key={email.id}
@@ -89,7 +87,7 @@ export function EmailListItem({
               </div>
             </div>
 
-            <VerificationDisplay email={email} isCopied={isCopied} onCopy={onCopy} />
+            <VerificationDisplay email={email} copiedId={copiedId} onCopy={onCopy} />
           </div>
         </div>
       </div>
