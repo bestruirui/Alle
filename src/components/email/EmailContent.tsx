@@ -32,8 +32,8 @@ export function EmailContent({ bodyHtml, bodyText }: { bodyHtml: string | null; 
   }
 
   return (
-    <div className="rounded-2xl bg-muted/30 border border-border overflow-hidden">
-      <div className="p-5">
+    <div className="rounded-[1.6rem] border-2 border-border bg-card shadow-[0_12px_0_rgba(36,17,61,0.14)] overflow-hidden">
+      <div className="p-6">
         {bodyHtml ? (
           <iframe
             ref={iframeRef}

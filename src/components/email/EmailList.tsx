@@ -126,48 +126,60 @@ export default function EmailList() {
   }, [hasNextPage, isFetching, fetchNextPage]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex h-screen overflow-hidden">
-        <aside className="w-full md:w-[420px] lg:w-[480px] flex-shrink-0 border-r border-border flex flex-col bg-card overflow-hidden">
-          <EmailListHeader
-            selectedEmails={selectedEmails}
-            loading={loading}
-            onRefresh={() => {
-              void refetch();
-            }}
-            onToggleSelectAll={handleToggleSelectAll}
-            onBatchDelete={handleBatchDelete}
-            onClearSelection={() => setSelectedEmails(new Set())}
-            onOpenSettings={handleOpenSettings}
-          />
+    <div className="min-h-screen memphis-pattern relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="memphis-shape memphis-shape--circle -left-48 -top-32" />
+        <div className="memphis-shape memphis-shape--triangle right-[-90px] bottom-24" />
+        <div className="memphis-shape memphis-shape--stripe left-1/2 top-1/2 -translate-x-1/2 translate-y-16" />
+      </div>
 
-          <div className="flex-1 overflow-hidden">
-            <EmailListInteractionsProvider
-              value={{
-                copiedId,
-                onCopy: handleCopy,
-                onEmailClick: handleEmailClick,
-                onEmailDelete: handleEmailDelete,
-                onAvatarToggle: handleAvatarToggle,
+      <div className="relative z-10 flex h-screen flex-col gap-6 px-4 py-6 md:flex-row md:gap-8 md:px-8">
+        <aside className="relative flex h-full w-full flex-col md:w-[420px] lg:w-[480px]">
+          <div className="memphis-panel flex h-full flex-col overflow-hidden border-2 border-border shadow-[0_24px_0_rgba(36,17,61,0.18)] backdrop-blur-[14px]">
+            <EmailListHeader
+              selectedEmails={selectedEmails}
+              loading={loading}
+              onRefresh={() => {
+                void refetch()
               }}
-            >
-              <EmailListContent
-                emails={emails}
-                loading={loading}
-                hasMore={hasNextPage}
-                onLoadMore={handleLoadMore}
-                onRefresh={() => {
-                  void refetch();
+              onToggleSelectAll={handleToggleSelectAll}
+              onBatchDelete={handleBatchDelete}
+              onClearSelection={() => setSelectedEmails(new Set())}
+              onOpenSettings={handleOpenSettings}
+            />
+
+            <div className="flex-1 overflow-hidden">
+              <EmailListInteractionsProvider
+                value={{
+                  copiedId,
+                  onCopy: handleCopy,
+                  onEmailClick: handleEmailClick,
+                  onEmailDelete: handleEmailDelete,
+                  onAvatarToggle: handleAvatarToggle,
                 }}
-                selectedEmailId={selectedEmailId}
-                selectedEmails={selectedEmails}
-              />
-            </EmailListInteractionsProvider>
+              >
+                <EmailListContent
+                  emails={emails}
+                  loading={loading}
+                  hasMore={hasNextPage}
+                  onLoadMore={handleLoadMore}
+                  onRefresh={() => {
+                    void refetch()
+                  }}
+                  selectedEmailId={selectedEmailId}
+                  selectedEmails={selectedEmails}
+                />
+              </EmailListInteractionsProvider>
+            </div>
           </div>
         </aside>
 
-        <main className="hidden md:flex flex-1 bg-background overflow-hidden">
-          <div className="w-full max-w-5xl mx-auto">{settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail   email={selectedEmail} />}</div>
+        <main className="relative hidden h-full flex-1 md:flex">
+          <div className="memphis-panel flex h-full w-full overflow-hidden border-2 border-border shadow-[0_24px_0_rgba(36,17,61,0.18)] backdrop-blur-[14px]">
+            <div className="mx-auto flex w-full max-w-5xl flex-1">
+              {settingsOpen ? <Settings onClose={handleCloseSettings} /> : <EmailDetail email={selectedEmail} />}
+            </div>
+          </div>
         </main>
       </div>
 
@@ -175,5 +187,5 @@ export default function EmailList() {
 
       <MobileSettingsDrawer open={mobileSettingsOpen} onClose={handleCloseSettings} onOpenChange={setMobileSettingsOpen} />
     </div>
-  );
+  )
 }

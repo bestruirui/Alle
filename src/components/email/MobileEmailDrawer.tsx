@@ -25,15 +25,17 @@ export function MobileEmailDrawer({ open, email, onClose, onOpenChange }: Mobile
         onOpenChange?.(nextOpen);
       }}
     >
-      <DrawerContent className="max-h-[92vh] md:hidden">
+      <DrawerContent className="max-h-[92vh] md:hidden bg-transparent">
         <DrawerHeader className="hidden">
           <DrawerTitle>{email?.subject}</DrawerTitle>
           <DrawerDescription>
             {t("from")} {email?.fromName}
           </DrawerDescription>
         </DrawerHeader>
-        <div className="h-[85vh] overflow-hidden">
-          <EmailDetail email={email} />
+        <div className="h-[85vh] overflow-hidden p-4">
+          <div className="memphis-panel h-full overflow-hidden border-2 border-border shadow-[0_20px_0_rgba(36,17,61,0.16)]">
+            <EmailDetail email={email} />
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

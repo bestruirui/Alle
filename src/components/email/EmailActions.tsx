@@ -25,13 +25,13 @@ export function EmailActions({
   }
 
   return (
-    <div className="w-8 h-8 flex items-center justify-center">
+    <div className="flex h-9 w-9 items-center justify-center">
       <DeleteDialog
         trigger={
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-xl"
+            className="h-9 w-9 rounded-2xl border-2 border-border bg-card shadow-[0_6px_0_rgba(36,17,61,0.12)]"
             onClick={(event) => event.stopPropagation()}
           >
             <Trash2 className="h-3.5 w-3.5" />

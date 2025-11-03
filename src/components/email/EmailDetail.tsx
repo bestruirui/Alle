@@ -1,96 +1,85 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import { Mail, Clock } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { EmailContent } from "@/components/email/EmailContent";
-import { getProviderLogo } from "@/lib/utils/logo";
-import type { Email } from "@/types";
+import Image from "next/image"
+import { Mail, Clock } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { EmailContent } from "@/components/email/EmailContent"
+import { getProviderLogo } from "@/lib/utils/logo"
+import type { Email } from "@/types"
 
 export function EmailDetail({ email }: { email: Email | null }) {
   if (!email) {
     return (
-      <div className="flex items-center justify-center h-full w-full">
-        <div className="flex flex-col items-center text-center p-8">
-          <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
-            <Mail className="h-10 w-10 text-muted-foreground" />
+      <div className="flex h-full items-center justify-center px-8">
+        <div className="memphis-panel flex flex-col items-center gap-5 px-12 py-14 text-center backdrop-blur-xl">
+          <div className="flex h-20 w-20 items-center justify-center rounded-[1.75rem] border-2 border-border bg-primary/10 shadow-[0_12px_0_rgba(36,17,61,0.14)]">
+            <Mail className="h-10 w-10 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">选择一封邮件</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
+          <h3 className="text-lg font-black text-foreground">选择一封邮件</h3>
+          <p className="max-w-xs text-sm text-muted-foreground opacity-80">
             从左侧列表中选择一封邮件以查看详细内容
           </p>
         </div>
       </div>
-    );
+    )
   }
 
-  const logo = getProviderLogo(email.fromAddress);
+  const logo = getProviderLogo(email.fromAddress)
 
-  // 格式化完整时间
   const formatFullTime = (sentAt: string | null): string => {
-    if (!sentAt) return '';
-    const date = new Date(sentAt);
-    if (Number.isNaN(date.getTime())) return '';
+    if (!sentAt) return ""
+    const date = new Date(sentAt)
+    if (Number.isNaN(date.getTime())) return ""
 
     return date.toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
 
   return (
-    <div className="flex flex-col h-full">
-      {/* 头部 */}
-      <div className="flex-shrink-0 border-b border-border bg-card">
-        <div className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-start gap-4 flex-1 min-w-0">
-              {/* Logo */}
-              <div className="flex-shrink-0">
-                {logo ? (
-                  <div className="w-14 h-14 rounded-2xl overflow-hidden bg-muted flex items-center justify-center shadow-sm">
-                    <Image src={logo} alt="" width={36} height={36} className="object-contain" />
-                  </div>
-                ) : (
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shadow-sm">
-                    <span className="text-primary font-bold text-2xl">
-                      {email.fromName?.[0] || "?"}
-                    </span>
-                  </div>
-                )}
-              </div>
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="border-b-2 border-border px-10 py-8">
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[1.75rem] border-2 border-border bg-primary/10 shadow-[0_12px_0_rgba(36,17,61,0.16)]">
+              {logo ? (
+                <Image src={logo} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+              ) : (
+                <span className="text-2xl font-black uppercase tracking-[0.3em] text-primary">
+                  {email.fromName?.[0] || "?"}
+                </span>
+              )}
+            </div>
 
-              {/* 发件人信息 */}
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-bold text-foreground mb-1 truncate">
-                  {email.fromName}
-                </h2>
-                <p className="text-sm text-muted-foreground truncate mb-2">
-                  {email.fromAddress}
-                </p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>{formatFullTime(email.sentAt)}</span>
-                </div>
+            <div className="space-y-3">
+              <h2 className="max-w-xl text-xl font-black text-foreground">
+                {email.fromName}
+              </h2>
+              <p className="text-sm text-muted-foreground opacity-80">
+                {email.fromAddress}
+              </p>
+              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5 text-primary" />
+                <span className="rounded-full bg-secondary/20 px-3 py-1 font-semibold uppercase tracking-[0.3em] text-secondary-foreground">
+                  {formatFullTime(email.sentAt)}
+                </span>
               </div>
             </div>
           </div>
-
-          {/* 主题 */}
-          <h3 className="text-base font-semibold text-foreground mb-4 leading-relaxed">
-            {email.subject}
-          </h3>
         </div>
+
+        <h3 className="mt-8 rounded-[1.5rem] bg-card px-6 py-4 text-base font-semibold leading-relaxed text-foreground shadow-[0_12px_0_rgba(36,17,61,0.16)]">
+          {email.subject}
+        </h3>
       </div>
 
-      {/* 内容区域 */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="p-6 space-y-6">
-            {/* 邮件正文 */}
+          <div className="space-y-6 px-10 py-8">
             <EmailContent
               bodyHtml={email.bodyHtml}
               bodyText={email.bodyText}
@@ -99,5 +88,5 @@ export function EmailDetail({ email }: { email: Email | null }) {
         </ScrollArea>
       </div>
     </div>
-  );
+  )
 }

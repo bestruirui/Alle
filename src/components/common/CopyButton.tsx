@@ -28,7 +28,7 @@ export function CopyButton({ text, isCopied, onCopy, className }: CopyButtonProp
       variant="ghost"
       size="icon"
       onClick={handleCopy}
-      className={cn("h-8 w-8 rounded-xl transition-all duration-200", className)}
+      className={cn("h-9 w-9 rounded-2xl border-2 border-border bg-card shadow-[0_6px_0_rgba(36,17,61,0.12)] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-ring/40 focus-visible:ring-[3px]", className)}
     >
       <AnimatePresence mode="wait">
         {isCopied ? (

@@ -16,8 +16,8 @@ export function EmailAvatar({ logo, name, isSelected, onClick }: EmailAvatarProp
   return (
     <motion.div
       onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.07 }}
+      whileTap={{ scale: 0.94 }}
       className="cursor-pointer"
     >
       <AnimatePresence mode="wait">
@@ -28,7 +28,7 @@ export function EmailAvatar({ logo, name, isSelected, onClick }: EmailAvatarProp
             animate={{ scale: 1, rotate: 0 }}
             exit={{ scale: 0, rotate: 90 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="w-12 h-12 rounded-xl shadow-sm flex items-center justify-center bg-primary/10 border border-primary"
+            className="flex h-12 w-12 items-center justify-center rounded-[1.6rem] border-2 border-primary bg-primary/15 text-primary shadow-[0_8px_0_rgba(255,92,141,0.22)]"
           >
             <CheckSquare className="h-6 w-6 text-primary" />
           </motion.div>
@@ -40,9 +40,9 @@ export function EmailAvatar({ logo, name, isSelected, onClick }: EmailAvatarProp
             exit={{ scale: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
           >
-            <Avatar className="w-12 h-12 shadow-sm">
+            <Avatar className="h-12 w-12 shadow-[0_8px_0_rgba(36,17,61,0.14)]">
               {logo && <AvatarImage src={logo} alt={name} />}
-              <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-semibold text-lg">
+              <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
                 {name?.[0] || "?"}
               </AvatarFallback>
             </Avatar>
