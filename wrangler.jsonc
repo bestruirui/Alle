@@ -1,0 +1,35 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "alle",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2025-03-01",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": ".open-next/assets"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"vars": {
+		"ENABLE_AI_EXTRACT": "true",
+		"EXTRACT_MODEL": "google-ai-studio/gemini-2.5-flash",
+		"JWT_MIN_TTL": "300",
+		"JWT_MAX_TTL": "6000"
+	},
+	"ai": {
+		"binding": "AI",
+		"remote": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "alle",
+			"database_id": "e613f341-1000-4a1c-8456-38b7a8e4b672",
+			"remote": false
+		}
+	]
+}
