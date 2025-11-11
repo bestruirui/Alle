@@ -14,9 +14,17 @@
 	"observability": {
 		"enabled": true
 	},
+	"triggers": {
+		"crons": [
+			"0 0 1 1 *"
+		]
+	},
 	"vars": {
 		"ENABLE_AI_EXTRACT": "true",
 		"EXTRACT_MODEL": "google-ai-studio/gemini-2.5-flash",
+		"ENABLE_AUTO_DEL": "false",
+		"AUTO_DEL_TYPE": "auth_code,auth_link",
+		"AUTO_DEL_TIME": "3600",
 		"JWT_MIN_TTL": "300",
 		"JWT_MAX_TTL": "6000"
 	},

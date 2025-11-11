@@ -59,6 +59,30 @@ const emailDB = {
   },
 
 
+  async deleteExpiredByType(env: CloudflareEnv, types: string[], expiredDate: string): Promise<number[]> {
+    const db = getDbFromEnv(env);
+
+    const typeConditions = types.map(type => sql`${email.emailType} = ${type}`);
+    const combinedCondition = typeConditions.length > 1
+      ? sql`${typeConditions[0]} OR ${typeConditions.slice(1).reduce((acc, condition) => sql`${acc} OR ${condition}`)}`
+      : typeConditions[0];
+
+    const expiredEmails = await db
+      .select({ id: email.id })
+      .from(email)
+      .where(
+        sql`(${combinedCondition}) AND ${email.sentAt} < ${expiredDate}`
+      );
+
+    if (!expiredEmails || expiredEmails.length === 0) {
+      return [];
+    }
+
+    const ids = expiredEmails.map((e: { id: number }) => e.id);
+    await db.delete(email).where(inArray(email.id, ids));
+    return ids;
+  },
+
   async create(env: CloudflareEnv, data: NewEmail): Promise<Email> {
     const db = getDbFromEnv(env);
 

@@ -13,6 +13,10 @@ const envVars = {
     OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
     USERNAME: process.env.USERNAME,
     PASSWORD: process.env.PASSWORD,
+    ENABLE_AUTO_DEL: process.env.ENABLE_AUTO_DEL,
+    AUTO_DEL_TYPE: process.env.AUTO_DEL_TYPE,
+    AUTO_DEL_TIME: process.env.AUTO_DEL_TIME,
+    AUTO_DEL_CRON: process.env.AUTO_DEL_CRON,
 };
 
 const configPath = path.join(__dirname, '..', 'wrangler.jsonc');
@@ -22,7 +26,7 @@ const configContent = fs.readFileSync(configPath, 'utf-8');
 const config = JSON.parse(configContent);
 
 if (config.vars) {
-    ['ENABLE_AI_EXTRACT', 'EXTRACT_MODEL', 'JWT_MIN_TTL', 'JWT_MAX_TTL']
+    ['ENABLE_AI_EXTRACT', 'EXTRACT_MODEL', 'JWT_MIN_TTL', 'JWT_MAX_TTL', 'ENABLE_AUTO_DEL', 'AUTO_DEL_TYPE', 'AUTO_DEL_TIME']
         .forEach(key => {
             if (envVars[key]) config.vars[key] = envVars[key];
         });
@@ -30,6 +34,10 @@ if (config.vars) {
 
 if (config.d1_databases?.[0]?.database_id && envVars.D1_DATABASE_ID) {
     config.d1_databases[0].database_id = envVars.D1_DATABASE_ID;
+}
+
+if (config.triggers?.crons?.[0] && envVars.AUTO_DEL_CRON) {
+    config.triggers.crons[0] = envVars.AUTO_DEL_CRON;
 }
 
 fs.writeFileSync(configPath, JSON.stringify(config, null, '\t'), 'utf-8');

@@ -47,6 +47,10 @@
 | ----------------------- | :--: | ----------------------------------------------------- |
 | `ENABLE_AI_EXTRACT`     |  ❌  | 是否启用 AI 识别,默认不启用                           |
 | `EXTRACT_MODEL`         |  ❌  | AI 识别模型,模型需要支持JSON Mode                     |
+| `ENABLE_AUTO_DEL`       |  ❌  | 是否启用自动删除过期邮件,默认不启用                    |
+| `AUTO_DEL_TYPE`         |  ❌  | 自动删除过期邮件类型,多个类型用逗号分隔                |
+| `AUTO_DEL_CRON`         |  ❌  | 自动删除过期邮件定时任务,默认不启用                    |
+| `AUTO_DEL_TIME`         |  ❌  | 自动删除过期邮件时间,单位秒                            |
 | `JWT_MIN_TTL`           |  ❌  | JWT 最小 TTL,默认300s                                 |
 | `JWT_MAX_TTL`           |  ❌  | JWT 最大 TTL,默认6000s                                |
 
@@ -59,6 +63,39 @@
 2. 后期更新手动点击Sync Upstream按钮即可
 
 
-**支持的模型**
+## AI 识别
 
-详情参考 [Cloudflare Workers AI 支持的模型](https://developers.cloudflare.com/workers-ai/features/json-mode/#supported-models)
+
+`ENABLE_AI_EXTRACT`填写true
+
+- 直接使用 Woreker AI
+
+这里挑一个模型 [Cloudflare Workers AI 支持的模型](https://developers.cloudflare.com/workers-ai/features/json-mode/#supported-models) 填写 `EXTRACT_MODEL`
+
+- 自定义模型
+
+需要支持JSON MODE,填写`OPENAI_API_KEY`,`OPENAI_BASE_URL`,`EXTRACT_MODEL`
+
+## 自动删除过期邮件
+
+`ENABLE_AUTO_DEL`填写true
+
+`AUTO_DEL_TYPE` 支持的类型
+
+| 类型 | 描述 |
+| ---  | --- |
+| auth_code | 授权码 |
+| auth_link | 授权链接 |
+| service_link | 服务链接,例如Github的pr请求通知 |
+| subscription_link | 广告链接的退订链接 |
+| other_link | 其他链接 |
+| none | 无 |
+
+多种类型使用英文逗号分隔,示例
+```
+AUTO_DEL_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
+```
+
+`AUTO_DEL_TIME` 自动删除过期邮件时间,单位秒
+
+`AUTO_DEL_CRON` 自动删除过期邮件定时任务

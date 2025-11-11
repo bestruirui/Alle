@@ -21,6 +21,10 @@ jobs:
       JWT_MAX_TTL: ${{ secrets.JWT_MAX_TTL }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+      ENABLE_AUTO_DEL: ${{ secrets.ENABLE_AUTO_DEL }}
+      AUTO_DEL_TYPE: ${{ secrets.AUTO_DEL_TYPE }}
+      AUTO_DEL_TIME: ${{ secrets.AUTO_DEL_TIME }}
+      AUTO_DEL_CRON: ${{ secrets.AUTO_DEL_CRON }}
       
     steps:
       - name: 检出代码仓库 - Checkout repository
