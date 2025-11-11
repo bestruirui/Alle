@@ -15,16 +15,16 @@ jobs:
       D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
       USERNAME: ${{ secrets.USERNAME }}
       PASSWORD: ${{ secrets.PASSWORD }}
-      ENABLE_AI_EXTRACT: ${{ secrets.ENABLE_AI_EXTRACT }}
-      EXTRACT_MODEL: ${{ secrets.EXTRACT_MODEL }}
-      JWT_MIN_TTL: ${{ secrets.JWT_MIN_TTL }}
-      JWT_MAX_TTL: ${{ secrets.JWT_MAX_TTL }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-      ENABLE_AUTO_DEL: ${{ secrets.ENABLE_AUTO_DEL }}
-      AUTO_DEL_TYPE: ${{ secrets.AUTO_DEL_TYPE }}
-      AUTO_DEL_TIME: ${{ secrets.AUTO_DEL_TIME }}
-      AUTO_DEL_CRON: ${{ secrets.AUTO_DEL_CRON }}
+      ENABLE_AI_EXTRACT: ${{ vars.ENABLE_AI_EXTRACT }}
+      EXTRACT_MODEL: ${{ vars.EXTRACT_MODEL }}
+      JWT_MIN_TTL: ${{ vars.JWT_MIN_TTL }}
+      JWT_MAX_TTL: ${{ vars.JWT_MAX_TTL }}
+      ENABLE_AUTO_DEL: ${{ vars.ENABLE_AUTO_DEL }}
+      AUTO_DEL_TYPE: ${{ vars.AUTO_DEL_TYPE }}
+      AUTO_DEL_TIME: ${{ vars.AUTO_DEL_TIME }}
+      AUTO_DEL_CRON: ${{ vars.AUTO_DEL_CRON }}
       
     steps:
       - name: 检出代码仓库 - Checkout repository
