@@ -1,8 +1,20 @@
 import emailDB from "@/lib/db/email";
 import extract from "./extract";
+import sendWebhook from '@/lib/webhook/webhook'
 import PostalMime from "postal-mime";
 import * as cheerio from 'cheerio';
-import type { NewEmail } from "@/types";
+import type { Email, NewEmail } from "@/types";
+
+
+function replaceTemplateAdvanced(template: string, email: Email): string {
+    return template.replace(/{(\w+)}/g, (match, key) => {
+        const value = email[key as keyof Email];
+        if (value === null || value === undefined) {
+            return '';
+        }
+        return JSON.stringify(String(value)).slice(1, -1);
+    });
+}
 
 export default async function storeEmail(
     message: ForwardableEmailMessage,
@@ -51,6 +63,9 @@ export default async function storeEmail(
 
         const res = await emailDB.create(env, emailData);
 
+        if (env.WEBHOOK_URL && env.WEBHOOK_TEMPLATE && env.WEBHOOK_TYPE.split(',').includes(emailData.emailType)) {
+            await sendWebhook(replaceTemplateAdvanced(env.WEBHOOK_TEMPLATE, res), env.WEBHOOK_URL);
+        }
         console.log("Email stored successfully:", {
             id: res.id,
             messageId: emailData.messageId,

@@ -63,6 +63,17 @@
 2. 后期更新手动点击Sync Upstream按钮即可
 
 
+## 邮件类型
+
+| 类型 | 描述 |
+| ---  | --- |
+| auth_code | 授权码 |
+| auth_link | 授权链接 |
+| service_link | 服务链接,例如Github的pr请求通知 |
+| subscription_link | 广告链接的退订链接 |
+| other_link | 其他链接 |
+| none | 无 |
+
 ## AI 识别
 
 
@@ -80,16 +91,7 @@
 
 `ENABLE_AUTO_DEL`填写true
 
-`AUTO_DEL_TYPE` 支持的类型
-
-| 类型 | 描述 |
-| ---  | --- |
-| auth_code | 授权码 |
-| auth_link | 授权链接 |
-| service_link | 服务链接,例如Github的pr请求通知 |
-| subscription_link | 广告链接的退订链接 |
-| other_link | 其他链接 |
-| none | 无 |
+`AUTO_DEL_TYPE` 支持的邮件类型
 
 多种类型使用英文逗号分隔,示例
 ```
@@ -99,3 +101,41 @@ AUTO_DEL_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
 `AUTO_DEL_TIME` 自动删除过期邮件时间,单位秒
 
 `AUTO_DEL_CRON` 自动删除过期邮件定时任务
+
+## WebHook 通知
+
+`WEBHOOK_URL` WebHook URL
+
+`WEBHOOK_TYPE` WebHook 发送的邮件类型
+
+多种类型使用英文逗号分隔,示例
+
+```
+WEBHOOK_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
+
+```
+`WEBHOOK_TEMPLATE` WebHook 模板
+
+模板支持的变量
+
+| 变量 | 描述 |
+| --- | --- |
+| messageId | 邮件ID |
+| fromAddress | 发件人地址 |
+| fromName | 发件人名称 |
+| toAddress | 收件人地址 |
+| recipient | 收件人 |
+| title | 邮件标题 |
+| bodyText | 邮件文本内容 |
+| bodyHtml | 邮件HTML内容 |
+| sentAt | 发送时间 |
+| receivedAt | 接收时间 |
+| emailType | 邮件类型 |
+| emailResult | 邮件结果 |
+| emailResultText | 邮件结果文本 |
+| emailError | 邮件错误 |
+
+注意 WebHook 模板 需要转义,下方是一个示例
+```
+{\"text\":{\"content\":\"{{fromName}}  {{emailResult}}\"},\"msgtype\":\"text\",}
+```

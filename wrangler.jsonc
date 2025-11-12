@@ -25,6 +25,9 @@
 		"ENABLE_AUTO_DEL": "false",
 		"AUTO_DEL_TYPE": "auth_code,auth_link",
 		"AUTO_DEL_TIME": "3600",
+		"WEBHOOK_URL": "",
+		"WEBHOOK_TYPE": "",
+		"WEBHOOK_TEMPLATE": "",
 		"JWT_MIN_TTL": "300",
 		"JWT_MAX_TTL": "6000"
 	},

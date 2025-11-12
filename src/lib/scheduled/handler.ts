@@ -8,7 +8,7 @@ export default async function scheduledHandler(
     ctx: ExecutionContext
 ): Promise<void> {
 
-    if (env.ENABLE_AUTO_DEL !== 'true') {
+    if (env.ENABLE_AUTO_DEL === 'false') {
         console.log('Auto delete is disabled');
         return;
     }
