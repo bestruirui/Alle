@@ -1,5 +1,8 @@
 ## 部署
 
+> [!WARNING]  
+> 此项目需要至少一个托管在Cloudflare的域名
+
 **获取 Cloudflare API 令牌**
 
 访问 [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens)
@@ -61,6 +64,18 @@
 **运行工作流**
 1. 然后在Action页面手动运行工作流
 2. 后期更新手动点击Sync Upstream按钮即可
+
+**启用邮件转发**
+
+1.访问[邮件转发](http://dash.cloudflare.com/?to=/:account/:zone/email/routing/routes)页面
+
+2.设置邮件转发到alle
+
+![](images/forward_1.png)
+
+域名为 `example.com`, 则转发地址为 `任意值@example.com`
+
+例如 `temp@example.com`,`alle@example.com`,`any@example.com` 这些地址收到的邮件都会显示在Alle中
 
 
 ## 邮件类型

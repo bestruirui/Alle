@@ -1,5 +1,8 @@
 ## Deployment
 
+> [!WARNING]
+> This project requires at least one domain hosted on Cloudflare
+
 **Get Cloudflare API Token**
 
 Visit [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens)
@@ -59,6 +62,19 @@ Copy to GitHub Secrets as `D1_DATABASE_ID`
 **Run Workflow**
 1. Then manually run the workflow on the Actions page
 2. For future updates, just click the Sync Upstream button
+
+**Enable Email Forwarding**
+
+1. Visit [Email Routing](http://dash.cloudflare.com/?to=/:account/:zone/email/routing/routes) page
+
+2. Set up email forwarding to alle
+
+![](images/forward_1.png)
+
+For domain `example.com`, the forwarding address should be `any-value@example.com`
+
+For example, `temp@example.com`, `alle@example.com`, `any@example.com` - emails received at these addresses will all be displayed in Alle
+
 
 
 ## Email Types
