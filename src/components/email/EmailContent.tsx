@@ -36,7 +36,7 @@ export default function EmailContent({ bodyHtml, bodyText }: { bodyHtml: string 
       {bodyHtml ? (
         <iframe
           ref={iframeRef}
-          srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>${bodyHtml}</body></html>`}
+          srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><base target="_blank"></head><body>${bodyHtml}</body></html>`}
           style={{
             width: '100%',
             height: `${iframeHeight}px`,
