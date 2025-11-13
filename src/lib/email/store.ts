@@ -34,6 +34,17 @@ export default async function storeEmail(
         const $ = cheerio.load(email.html || "")
         $('script').remove();
         $('style').remove();
+        $('a').each(function () {
+            const $elem = $(this);
+            const href = $elem.attr('href');
+            const text = $elem.text().trim();
+
+            if (href && text) {
+                $elem.replaceWith(`[${text}](${href})`);
+            } else if (href) {
+                $elem.replaceWith(href);
+            }
+        });
         const emailText = $('body').text().replace(/\s+/g, ' ').trim();
 
         const allContent = [email.subject || '', email.text || '', emailText].filter(Boolean).join('\n');
