@@ -25,6 +25,9 @@ jobs:
       AUTO_DEL_TYPE: ${{ vars.AUTO_DEL_TYPE }}
       AUTO_DEL_TIME: ${{ vars.AUTO_DEL_TIME }}
       AUTO_DEL_CRON: ${{ vars.AUTO_DEL_CRON }}
+      WEBHOOK_URL: ${{ vars.WEBHOOK_URL }}
+      WEBHOOK_TYPE: ${{ vars.WEBHOOK_TYPE }}
+      WEBHOOK_TEMPLATE: ${{ vars.WEBHOOK_TEMPLATE }}
       
     steps:
       - name: 检出代码仓库 - Checkout repository
