@@ -56,8 +56,17 @@ Copy to GitHub Secrets as `D1_DATABASE_ID`
 | `AUTO_DEL_TIME`         |    ❌    | Time for automatic deletion of expired emails, in seconds                            |
 | `JWT_MIN_TTL`           |    ❌    | JWT minimum TTL, defaults to 300s                                 |
 | `JWT_MAX_TTL`           |    ❌    | JWT maximum TTL, defaults to 6000s                                |
+| `TELEGRAM_TEMPLATE`     |    ❌    | Telegram message template                                          |
+| `TELEGRAM_TYPE`         |    ❌    | Email types for Telegram delivery                                 |
 
 ![](images/github_2.png)
+
+6. If you want to use Telegram Bot notifications, also add the following Secrets:
+
+| Secret Name             | Required | Purpose                                                  |
+| ----------------------- | :------: | ----------------------------------------------------- |
+| `TELEGRAM_BOT_TOKEN`    |    ❌    | Telegram Bot Token                                    |
+| `TELEGRAM_CHAT_ID`      |    ❌    | Telegram Chat ID                                      |
 
 **Run Workflow**
 1. Then manually run the workflow on the Actions page
@@ -152,4 +161,29 @@ Template supported variables
 Note: WebHook template needs to be escaped, here's an example
 ```
 {\"text\":{\"content\":\"{{fromName}}  {{emailResult}}\"},\"msgtype\":\"text\",}
+```
+
+## Telegram Bot Notification
+
+`TELEGRAM_BOT_TOKEN` Telegram Bot Token
+
+`TELEGRAM_CHAT_ID` Telegram Chat ID
+
+`TELEGRAM_TYPE` Email types for Telegram delivery
+
+Multiple types are separated by English commas, example
+
+```
+TELEGRAM_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
+```
+
+`TELEGRAM_TEMPLATE` Telegram message template
+
+Template supports the same variables as WebHook and supports HTML format, example:
+```
+<b>New Email Notification</b>
+From: {fromName}
+Subject: {title}
+Type: {emailType}
+Result: {emailResult}
 ```

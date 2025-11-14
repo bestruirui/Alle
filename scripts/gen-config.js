@@ -20,6 +20,10 @@ const envVars = {
     WEBHOOK_URL: process.env.WEBHOOK_URL,
     WEBHOOK_TYPE: process.env.WEBHOOK_TYPE,
     WEBHOOK_TEMPLATE: process.env.WEBHOOK_TEMPLATE,
+    TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+    TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
+    TELEGRAM_TEMPLATE: process.env.TELEGRAM_TEMPLATE,
+    TELEGRAM_TYPE: process.env.TELEGRAM_TYPE,
 };
 
 const configPath = path.join(__dirname, '..', 'wrangler.jsonc');
@@ -29,7 +33,7 @@ const configContent = fs.readFileSync(configPath, 'utf-8');
 const config = JSON.parse(configContent);
 
 if (config.vars) {
-    ['ENABLE_AI_EXTRACT', 'EXTRACT_MODEL', 'JWT_MIN_TTL', 'JWT_MAX_TTL', 'ENABLE_AUTO_DEL', 'AUTO_DEL_TYPE', 'AUTO_DEL_TIME', 'WEBHOOK_URL', 'WEBHOOK_TYPE', 'WEBHOOK_TEMPLATE']
+    ['ENABLE_AI_EXTRACT', 'EXTRACT_MODEL', 'JWT_MIN_TTL', 'JWT_MAX_TTL', 'ENABLE_AUTO_DEL', 'AUTO_DEL_TYPE', 'AUTO_DEL_TIME', 'WEBHOOK_URL', 'WEBHOOK_TYPE', 'WEBHOOK_TEMPLATE', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'TELEGRAM_TEMPLATE', 'TELEGRAM_TYPE']
         .forEach(key => {
             if (envVars[key]) config.vars[key] = envVars[key];
         });
