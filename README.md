@@ -7,7 +7,7 @@
 </div>
 
 <div align="center">
-  <span>简体中文 | <a href="/README-en.md" style="margin-left: 5px">English</a></span>
+  <span>简体中文 | <a href="/README_en.md" style="margin-left: 5px">English</a></span>
 </div>
 
 ---
