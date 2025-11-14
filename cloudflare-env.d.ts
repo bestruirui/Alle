@@ -12,6 +12,10 @@ declare namespace Cloudflare {
 		WEBHOOK_URL: "";
 		WEBHOOK_TYPE: "";
 		WEBHOOK_TEMPLATE: "";
+		TELEGRAM_BOT_TOKEN: string;
+		TELEGRAM_CHAT_ID: string;
+		TELEGRAM_TEMPLATE: string;
+		TELEGRAM_TYPE: string;
 		JWT_MIN_TTL: "300";
 		JWT_MAX_TTL: "6000";
 		USERNAME: string;

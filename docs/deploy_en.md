@@ -153,3 +153,28 @@ Note: WebHook template needs to be escaped, here's an example
 ```
 {\"text\":{\"content\":\"{{fromName}}  {{emailResult}}\"},\"msgtype\":\"text\",}
 ```
+
+## Telegram Bot Notification
+
+`TELEGRAM_BOT_TOKEN` Telegram Bot Token
+
+`TELEGRAM_CHAT_ID` Telegram Chat ID
+
+`TELEGRAM_TYPE` Email types for Telegram delivery
+
+Multiple types are separated by English commas, example
+
+```
+TELEGRAM_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
+```
+
+`TELEGRAM_TEMPLATE` Telegram message template
+
+Template supports the same variables as WebHook and supports HTML format, example:
+```
+<b>New Email Notification</b>
+From: {fromName}
+Subject: {title}
+Type: {emailType}
+Result: {emailResult}
+```

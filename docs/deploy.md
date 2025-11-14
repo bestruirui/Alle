@@ -154,3 +154,28 @@ WEBHOOK_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
 ```
 {\"text\":{\"content\":\"{{fromName}}  {{emailResult}}\"},\"msgtype\":\"text\",}
 ```
+
+## Telegram Bot 通知
+
+`TELEGRAM_BOT_TOKEN` Telegram Bot Token
+
+`TELEGRAM_CHAT_ID` Telegram Chat ID
+
+`TELEGRAM_TYPE` Telegram 发送的邮件类型
+
+多种类型使用英文逗号分隔,示例
+
+```
+TELEGRAM_TYPE=auth_code,auth_link,service_link,subscription_link,other_link
+```
+
+`TELEGRAM_TEMPLATE` Telegram 消息模板
+
+模板支持的变量与WebHook相同，支持HTML格式，示例：
+```
+<b>新邮件通知</b>
+发件人: {fromName}
+标题: {title}
+类型: {emailType}
+结果: {emailResult}
+```

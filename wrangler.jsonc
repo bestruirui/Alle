@@ -28,6 +28,10 @@
 		"WEBHOOK_URL": "",
 		"WEBHOOK_TYPE": "",
 		"WEBHOOK_TEMPLATE": "",
+		"TELEGRAM_BOT_TOKEN": "",
+		"TELEGRAM_CHAT_ID": "",
+		"TELEGRAM_TEMPLATE": "",
+		"TELEGRAM_TYPE": "",
 		"JWT_MIN_TTL": "300",
 		"JWT_MAX_TTL": "6000"
 	},

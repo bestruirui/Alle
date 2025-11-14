@@ -28,6 +28,10 @@ jobs:
       WEBHOOK_URL: ${{ vars.WEBHOOK_URL }}
       WEBHOOK_TYPE: ${{ vars.WEBHOOK_TYPE }}
       WEBHOOK_TEMPLATE: ${{ vars.WEBHOOK_TEMPLATE }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TELEGRAM_TEMPLATE: ${{ vars.TELEGRAM_TEMPLATE }}
+      TELEGRAM_TYPE: ${{ vars.TELEGRAM_TYPE }}
       
     steps:
       - name: 检出代码仓库 - Checkout repository
