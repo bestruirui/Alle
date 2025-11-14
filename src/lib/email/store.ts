@@ -59,7 +59,7 @@ export default async function storeEmail(
             messageId: email.messageId || null,
             fromAddress: emailFromAddress,
             fromName: emailFromName,
-            toAddress: message.to,
+            toAddress: email.deliveredTo || message.to,
             recipient: JSON.stringify(email.to),
             title: email.subject || null,
             bodyText: email.text || "",

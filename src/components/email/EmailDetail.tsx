@@ -98,15 +98,20 @@ export default function EmailDetail({ email }: { email: Email | null }) {
               transition={{ delay: 0.15, duration: 0.3 }}
               className="flex-1 min-w-0"
             >
-              <h2 className="text-xl font-bold text-foreground mb-1 truncate">
-                <span className="mr-2">{email.fromName}</span>
-                <span className="text-sm text-muted-foreground font-normal">
+              <div>
+                <span className="mr-1 text-xl font-bold">{email.fromName}</span>
+                <span className="text-sm text-muted-foreground">
                   {email.fromAddress}
                 </span>
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {formatFullTime(email.sentAt)}
-              </p>
+              </div>
+              <div>
+                <span className="text-sm text-muted-foreground mr-1">
+                  {email.toAddress}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {formatFullTime(email.sentAt)}
+                </span>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -115,27 +120,25 @@ export default function EmailDetail({ email }: { email: Email | null }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="px-6 pb-4"
+          className="px-6 pb-2"
         >
           <h3 className="text-base font-semibold text-foreground leading-relaxed">
             {email.title}
           </h3>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.3 }}
-          className="px-6 pb-4"
-        >
-          {editMode && (
-            <EmailEditResult
-              email={email}
-            />
-          )}
-        </motion.div>
 
-        {/* 头部与内容的分界线 */}
+        {editMode && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.3 }}
+            className="px-6 pb-4"
+          >
+            <EmailEditResult email={email} />
+          </motion.div>
+        )}
+
         <div className="border-b border-border"></div>
       </div>
 
@@ -153,6 +156,6 @@ export default function EmailDetail({ email }: { email: Email | null }) {
           />
         </motion.div>
       </ScrollArea>
-    </motion.div>
+    </motion.div >
   );
 }
