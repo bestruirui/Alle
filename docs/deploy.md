@@ -56,8 +56,17 @@
 | `AUTO_DEL_TIME`         |  ❌  | 自动删除过期邮件时间,单位秒                            |
 | `JWT_MIN_TTL`           |  ❌  | JWT 最小 TTL,默认300s                                 |
 | `JWT_MAX_TTL`           |  ❌  | JWT 最大 TTL,默认6000s                                |
+| `TELEGRAM_TEMPLATE`     |  ❌  | Telegram 消息模板                                     |
+| `TELEGRAM_TYPE`         |  ❌  | Telegram 发送的邮件类型                               |
 
 ![](images/github_2.png)
+
+6. 如需使用Telegram Bot通知，还需添加以下 Secrets：
+
+| Secret 名称             | 必需 | 用途                                                  |
+| ----------------------- | :--: | ----------------------------------------------------- |
+| `TELEGRAM_BOT_TOKEN`    |  ❌  | Telegram Bot Token                                    |
+| `TELEGRAM_CHAT_ID`      |  ❌  | Telegram Chat ID                                      |
 
 
 
