@@ -9,6 +9,7 @@ import useFormatTime from "@/lib/hooks/useFormatTime";
 import EmailAvatar from "@/components/email/EmailAvatar";
 import EmailActions from "@/components/email/EmailActions";
 import VerificationDisplay from "@/components/email/VerificationDisplay";
+import { cn } from "@/lib/utils/utils";
 import type { Email } from "@/types";
 
 interface EmailListItemProps {
@@ -29,6 +30,8 @@ export default function EmailListItem({
   const { onEmailClick, onAvatarToggle } = useEmailListInteractions();
 
   const formattedTime = useMemo(() => formatTime(email.sentAt), [formatTime, email.sentAt]);
+  const isRead = email.readStatus === 1;
+  const isUnread = !isRead;
 
   return (
     <motion.div
@@ -85,7 +88,12 @@ export default function EmailListItem({
           <div className="flex w-0 min-w-0 flex-1 flex-col justify-center">
             <div className="mb-3 flex flex-col">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="flex-1 truncate text-sm font-semibold text-foreground">
+                <h3
+                  className={cn(
+                    "flex-1 truncate text-sm",
+                    isUnread ? "font-semibold text-foreground" : "font-medium text-muted-foreground",
+                  )}
+                >
                   {email.fromName}
                 </h3>
                 <div className="flex items-center gap-2">
