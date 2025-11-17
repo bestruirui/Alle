@@ -49,4 +49,6 @@ export const failure = (
 export interface ListParams {
   limit?: number;
   offset?: number;
+  readStatus?: number;
+  emailType?: string;
 }
