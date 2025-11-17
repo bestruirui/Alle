@@ -18,6 +18,7 @@ export interface Email {
   emailResult: string | null;
   emailResultText: string | null;
   emailError: string | null;
+  readStatus: number;
 }
 
 export type NewEmail = Omit<Email, 'id'>;

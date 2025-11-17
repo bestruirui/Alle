@@ -1,0 +1,1 @@
+ALTER TABLE email ADD COLUMN read_status INTEGER DEFAULT 0;

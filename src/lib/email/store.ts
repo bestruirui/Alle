@@ -71,6 +71,7 @@ export default async function storeEmail(
             emailResult: result.result || "",
             emailResultText: result.result_text || "",
             emailError: null,
+            readStatus: 0,
         };
 
         const res = await emailDB.create(env, emailData);
