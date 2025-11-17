@@ -1,6 +1,20 @@
 import { create } from 'zustand';
 
-import type { Email } from '@/types';
+import type { Email, ExtractResultType } from '@/types';
+
+export type ReadStatusFilter = 'all' | 'read' | 'unread';
+
+export interface EmailFilters {
+  readStatus: ReadStatusFilter;
+  emailTypes: ExtractResultType[];
+  recipients: string[];
+}
+
+const createDefaultFilters = (): EmailFilters => ({
+  readStatus: 'all',
+  emailTypes: [],
+  recipients: [],
+});
 
 const dedupeEmails = (emails: Email[]): Email[] => {
   const map = new Map<number, Email>();
@@ -22,6 +36,7 @@ interface EmailStoreState {
   settingsOpen: boolean;
   lastSyncedAt: string | null;
   visibleEmailId: number | null;
+  filters: EmailFilters;
   setEmails: (emails: Email[], total: number, hasMore: boolean) => void;
   appendEmails: (emails: Email[], total: number, hasMore: boolean) => void;
   selectEmail: (emailId: number | null) => void;
@@ -30,6 +45,9 @@ interface EmailStoreState {
   setVisibleEmailId: (emailId: number | null) => void;
   removeEmail: (emailId: number) => void;
   removeEmails: (emailIds: number[]) => void;
+  markEmail: (emailId: number, isRead: boolean) => void;
+  updateFilters: (partial: Partial<EmailFilters>) => void;
+  resetFilters: () => void;
 }
 
 const useEmailStore = create<EmailStoreState>((set, get) => ({
@@ -40,6 +58,7 @@ const useEmailStore = create<EmailStoreState>((set, get) => ({
   settingsOpen: false,
   lastSyncedAt: null,
   visibleEmailId: null,
+  filters: createDefaultFilters(),
   setEmails: (emails, total, hasMore) => {
     set({
       emails: dedupeEmails(emails),
@@ -78,6 +97,25 @@ const useEmailStore = create<EmailStoreState>((set, get) => ({
       total: Math.max(0, get().total - emailIds.length),
       selectedEmailId: selectedId && idSet.has(selectedId) ? null : selectedId,
     });
+  },
+  markEmail: (emailId, isRead) => {
+    const readStatusValue = isRead ? 1 : 0;
+    set((state) => ({
+      emails: state.emails.map((email) =>
+        email.id === emailId ? { ...email, readStatus: readStatusValue } : email,
+      ),
+    }));
+  },
+  updateFilters: (partial) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        ...partial,
+      },
+    }));
+  },
+  resetFilters: () => {
+    set({ filters: createDefaultFilters() });
   },
 }));
 

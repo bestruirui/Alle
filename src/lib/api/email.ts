@@ -2,8 +2,39 @@ import { apiFetch, ApiError } from './client';
 
 import type { Email, ApiResponse, ExtractResultType } from '@/types';
 
-export async function fetchEmails(limit = 50, offset = 0) {
-    const response = await apiFetch(`/api/email/list?limit=${limit}&offset=${offset}`);
+interface FetchEmailsParams {
+    limit?: number;
+    offset?: number;
+    readStatus?: number;
+    emailTypes?: ExtractResultType[];
+    recipients?: string[];
+}
+
+export async function fetchEmails({
+    limit = 50,
+    offset = 0,
+    readStatus,
+    emailTypes = [],
+    recipients = [],
+}: FetchEmailsParams = {}) {
+    const searchParams = new URLSearchParams({
+        limit: String(limit),
+        offset: String(offset),
+    });
+
+    if (typeof readStatus === 'number') {
+        searchParams.set('read_status', String(readStatus));
+    }
+
+    if (emailTypes.length > 0) {
+        searchParams.set('email_type', emailTypes.join(','));
+    }
+
+    if (recipients.length > 0) {
+        searchParams.set('recipient', recipients.join(','));
+    }
+
+    const response = await apiFetch(`/api/email/list?${searchParams.toString()}`);
 
     if (!response.ok) {
         throw new ApiError('Failed to fetch emails', response.status);
@@ -91,3 +122,25 @@ export async function fetchRecipients() {
     return data.data;
 }
 
+export async function mark(id: number, isRead: boolean) {
+    const searchParams = new URLSearchParams({
+        id: String(id),
+        is_read: isRead ? '1' : '0',
+    });
+
+    const response = await apiFetch(`/api/email/mark?${searchParams.toString()}`, {
+        method: 'POST',
+    });
+
+    if (!response.ok) {
+        throw new ApiError('Failed to update email read status', response.status);
+    }
+
+    const data = (await response.json()) as ApiResponse<null>;
+
+    if (!data.success) {
+        throw new ApiError(data.error || 'Failed to update email read status', response.status);
+    }
+
+    return { emailId: id, isRead };
+}
