@@ -178,6 +178,19 @@ const emailDB = {
     const row = await db.insert(email).values(data).returning().get();
     return row as Email;
   },
+
+  async getAllRecipients(): Promise<string[]> {
+    const db = getDb();
+
+    const recipients = await db
+      .select({ toAddress: email.toAddress })
+      .from(email)
+      .where(sql`${email.toAddress} IS NOT NULL`)
+      .groupBy(email.toAddress)
+      .orderBy(email.toAddress);
+
+    return recipients.map(r => r.toAddress).filter(Boolean) as string[];
+  },
 };
 
 export default emailDB;
