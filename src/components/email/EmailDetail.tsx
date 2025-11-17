@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,10 +8,20 @@ import { useSettingsStore } from "@/lib/store/settings";
 import EmailContent from "@/components/email/EmailContent";
 import EmailAvatar from "@/components/email/EmailAvatar";
 import EmailEditResult from "@/components/email/EmailEditResult";
+import { useMarkEmail } from "@/lib/hooks/useEmailApi";
 import type { Email } from "@/types";
 
 export default function EmailDetail({ email }: { email: Email | null }) {
   const { editMode } = useSettingsStore();
+  const { mutate: markEmail } = useMarkEmail();
+
+  useEffect(() => {
+    if (!email || email.readStatus === 1) {
+      return;
+    }
+
+    markEmail({ emailId: email.id, isRead: true });
+  }, [email, markEmail]);
 
   if (!email) {
     return (

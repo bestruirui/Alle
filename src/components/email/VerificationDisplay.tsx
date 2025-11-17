@@ -1,14 +1,17 @@
 "use client";
 
+import { useCallback, type MouseEvent } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEmailListInteractions } from "@/components/email/EmailListInteractionsContext";
 import CopyButton from "@/components/common/CopyButton";
 import getEmailTypeStyle from "@/lib/constants/emailTypes";
+import { useMarkEmail } from "@/lib/hooks/useEmailApi";
 import type { Email } from "@/types";
 
 export default function VerificationDisplay({ email }: { email: Email }) {
   const { copiedId, onCopy } = useEmailListInteractions();
+  const { mutate: markEmail } = useMarkEmail();
 
   if (!email.emailResult || email.emailType === "none") {
     return null;
@@ -17,6 +20,26 @@ export default function VerificationDisplay({ email }: { email: Email }) {
   const config = getEmailTypeStyle(email.emailType);
   const copyId = `list-result-${email.id}`;
   const isCopied = copiedId === copyId;
+
+  const markAsRead = useCallback(() => {
+    if (email.readStatus === 1) {
+      return;
+    }
+    markEmail({ emailId: email.id, isRead: true });
+  }, [email.id, email.readStatus, markEmail]);
+
+  const handleCopy = useCallback(() => {
+    markAsRead();
+    onCopy(copyId);
+  }, [copyId, markAsRead, onCopy]);
+
+  const handleOpenLink = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>) => {
+      event.stopPropagation();
+      markAsRead();
+    },
+    [markAsRead],
+  );
 
   return (
     <div className={`flex items-center gap-2 p-2.5 rounded-lg ${config.bgClass}`}>
@@ -30,7 +53,7 @@ export default function VerificationDisplay({ email }: { email: Email }) {
               href={email.emailResult}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(event) => event.stopPropagation()}
+              onClick={handleOpenLink}
             >
               <ExternalLink />
             </a>
@@ -39,7 +62,7 @@ export default function VerificationDisplay({ email }: { email: Email }) {
         <CopyButton
           text={email.emailResult}
           isCopied={isCopied}
-          onCopy={() => onCopy(copyId)}
+          onCopy={handleCopy}
         />
       </div>
     </div>
