@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, type MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEmailListInteractions } from "@/components/email/EmailListInteractionsContext";
@@ -21,25 +21,22 @@ export default function VerificationDisplay({ email }: { email: Email }) {
   const copyId = `list-result-${email.id}`;
   const isCopied = copiedId === copyId;
 
-  const markAsRead = useCallback(() => {
+  const markAsRead = () => {
     if (email.readStatus === 1) {
       return;
     }
     markEmail({ emailId: email.id, isRead: true });
-  }, [email.id, email.readStatus, markEmail]);
+  };
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = () => {
     markAsRead();
     onCopy(copyId);
-  }, [copyId, markAsRead, onCopy]);
+  };
 
-  const handleOpenLink = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>) => {
-      event.stopPropagation();
-      markAsRead();
-    },
-    [markAsRead],
-  );
+  const handleOpenLink = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.stopPropagation();
+    markAsRead();
+  };
 
   return (
     <div className={`flex items-center gap-2 p-2.5 rounded-lg ${config.bgClass}`}>
