@@ -75,3 +75,19 @@ export async function updateEmail(emailId: number, emailResult: string | null, e
     return { emailId, emailResult, emailType };
 }
 
+export async function fetchRecipients() {
+    const response = await apiFetch('/api/email/recipients');
+
+    if (!response.ok) {
+        throw new ApiError('Failed to fetch recipients', response.status);
+    }
+
+    const data = (await response.json()) as ApiResponse<string[]>;
+
+    if (!data.success || !data.data) {
+        throw new ApiError(data.error || 'Failed to fetch recipients', response.status);
+    }
+
+    return data.data;
+}
+

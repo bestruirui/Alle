@@ -26,7 +26,7 @@ const email = sqliteTable('email', {
 const emailDB = {
   async list(params: ListParams = {}): Promise<Email[]> {
     const db = getDb();
-    const { limit = 100, offset = 0, readStatus, emailType } = params;
+    const { limit = 100, offset = 0, readStatus, emailType, recipient } = params;
 
     const conditions = [];
 
@@ -37,11 +37,20 @@ const emailDB = {
     }
 
     if (emailType) {
-      const types = emailType.split(',').map(t => t.trim());
+      const types = emailType.split(',').map(t => t.trim()).filter(Boolean);
       if (types.length > 1) {
         conditions.push(inArray(email.emailType, types));
-      } else {
-        conditions.push(sql`${email.emailType} = ${emailType}`);
+      } else if (types.length === 1) {
+        conditions.push(sql`${email.emailType} = ${types[0]}`);
+      }
+    }
+
+    if (recipient) {
+      const recipients = recipient.split(',').map(r => r.trim()).filter(Boolean);
+      if (recipients.length > 1) {
+        conditions.push(inArray(email.toAddress, recipients));
+      } else if (recipients.length === 1) {
+        conditions.push(sql`${email.toAddress} = ${recipients[0]}`);
       }
     }
 
@@ -64,7 +73,7 @@ const emailDB = {
 
   async count(params: ListParams = {}): Promise<number> {
     const db = getDb();
-    const { readStatus, emailType } = params;
+    const { readStatus, emailType, recipient } = params;
 
     const conditions = [];
 
@@ -75,11 +84,20 @@ const emailDB = {
     }
 
     if (emailType) {
-      const types = emailType.split(',').map(t => t.trim());
+      const types = emailType.split(',').map(t => t.trim()).filter(Boolean);
       if (types.length > 1) {
         conditions.push(inArray(email.emailType, types));
-      } else {
-        conditions.push(sql`${email.emailType} = ${emailType}`);
+      } else if (types.length === 1) {
+        conditions.push(sql`${email.emailType} = ${types[0]}`);
+      }
+    }
+
+    if (recipient) {
+      const recipients = recipient.split(',').map(r => r.trim()).filter(Boolean);
+      if (recipients.length > 1) {
+        conditions.push(inArray(email.toAddress, recipients));
+      } else if (recipients.length === 1) {
+        conditions.push(sql`${email.toAddress} = ${recipients[0]}`);
       }
     }
 

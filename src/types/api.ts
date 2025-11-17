@@ -51,4 +51,5 @@ export interface ListParams {
   offset?: number;
   readStatus?: number;
   emailType?: string;
+  recipient?: string;
 }

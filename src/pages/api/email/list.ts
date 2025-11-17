@@ -12,7 +12,7 @@ async function listHandler(req: NextApiRequest, res: NextApiResponse) {
     return failure(res, 'Method not allowed', 405);
   }
 
-  const { limit, offset, read_status, email_type } = req.query;
+  const { limit, offset, read_status, email_type, recipient } = req.query;
 
   if (limit !== undefined) {
     const limitNum = Number(limit);
@@ -45,11 +45,27 @@ async function listHandler(req: NextApiRequest, res: NextApiResponse) {
     }
   }
 
+  let recipientValue: string | undefined;
+  if (recipient !== undefined) {
+    const recipientArray = Array.isArray(recipient) ? recipient : [recipient];
+    const normalizedRecipients = recipientArray
+      .map((item) => (typeof item === 'string' ? item.trim() : ''))
+      .filter((item) => item.length > 0)
+      .join(',');
+
+    if (!normalizedRecipients) {
+      return failure(res, 'recipient must be a non-empty string', 400);
+    }
+
+    recipientValue = normalizedRecipients;
+  }
+
   const params: ListParams = {
     limit: limit ? Number(limit) : 100,
     offset: offset ? Number(offset) : 0,
     readStatus: read_status ? Number(read_status) : undefined,
     emailType: email_type as string | undefined,
+    recipient: recipientValue,
   };
 
   try {
