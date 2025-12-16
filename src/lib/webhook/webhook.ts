@@ -1,22 +1,24 @@
-export default async function sendWebhook(payload: string, url: string): Promise<void> {
+export default async function sendWebhook(url: string, method: 'GET' | 'POST' = 'POST', payload?: string): Promise<void> {
     if (!url) {
         console.error('Webhook error: URL is required')
         return
     }
 
-    const requestHeaders = {
-        'Content-Type': 'application/json',
-    }
-
     try {
         const controller = new AbortController()
         const timeoutId = setTimeout(() => controller.abort(), 5000)
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: requestHeaders,
-            body: payload,
+
+        const fetchOptions: RequestInit = {
+            method,
             signal: controller.signal
-        })
+        }
+
+        if (method === 'POST' && payload) {
+            fetchOptions.headers = { 'Content-Type': 'application/json' }
+            fetchOptions.body = payload
+        }
+
+        const response = await fetch(url, fetchOptions)
 
         clearTimeout(timeoutId)
 
